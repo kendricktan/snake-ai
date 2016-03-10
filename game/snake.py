@@ -1,20 +1,6 @@
-import pygame, random, sys, math, copy, time
+import pygame, random, sys
 from pygame.locals import *
-from enum import Enum
-
-# I like to play snake in a symmetrical window
-GAME_WIDTH_HEIGHT = 60
-
-# Our blocksizes for the snake and apple
-BLOCK_SIZE = 10
-
-
-class Directions(Enum):
-    Left = -2
-    Up = -1
-    Down = 1
-    Right = 2
-
+from .constants import *
 
 class Apple:
     def __init__(self):
@@ -115,13 +101,13 @@ class Snake:
 
 
 class SnakeWindow:
-    global GAME_WIDTH_HEIGHT, BLOCK_SIZE
+    global GAME_WIDTH_HEIGHT, BLOCK_SIZE, NN_VISUALIZE_WIDTH_HEIGHT, NN_VISUALIZE_SIZE
 
     def __init__(self):
         pygame.init()
 
         # Creates our window and names it
-        self.window = pygame.display.set_mode((GAME_WIDTH_HEIGHT * BLOCK_SIZE, GAME_WIDTH_HEIGHT * BLOCK_SIZE))
+        self.window = pygame.display.set_mode((GAME_WIDTH_HEIGHT * BLOCK_SIZE, GAME_WIDTH_HEIGHT * BLOCK_SIZE + NN_VISUALIZE_WIDTH_HEIGHT * NN_VISUALIZE_SIZE))
         pygame.display.set_caption('snake-ai')
 
         # Renderer for snake and apple
@@ -136,6 +122,16 @@ class SnakeWindow:
         # Our game clock
         self.clock = pygame.time.Clock()
 
+        # Our grey (but transparent) box
+        self.grey_box = pygame.Surface((NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE))
+        #self.grey_box.set_alpha(100)
+        self.grey_box.fill((189, 195, 199))
+
+        # Our white box
+        self.white_box = pygame.Surface((NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE))
+        #self.white_box.set_alpha(100)
+        self.grey_box.fill((255, 255, 255))
+
     # Sets our snake object
     def setSnake(self, snake):
         self._snake = snake
@@ -144,7 +140,13 @@ class SnakeWindow:
         pass
 
     def renderText(self, s, x, y):
-        self.window.blit(self.font.render(s, True, (0, 0, 0,)),(x, y));
+        self.window.blit(self.font.render(s, True, (0, 0, 0,)),(x, y))
+
+    def renderGrayBox(self, x, y):
+        self.window.blit(self.grey_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
+
+    def renderWhiteBox(self, x, y):
+        self.window.blit(self.white_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
 
     def update(self):
         # Key presses
@@ -167,9 +169,12 @@ class SnakeWindow:
                 elif e.key == K_l:
                     self._snake.xs.append(999)
                     self._snake.ys.append(999)
+                elif e.key == K_i:
+                    print(self.getInputs())
 
-        # Renders window white
-        self.window.fill((255, 255, 255))
+        # Renders game and neural network visualize section
+        self.window.fill((255, 255, 255), (0, 0, GAME_WIDTH_HEIGHT*BLOCK_SIZE, GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+        self.window.fill((218, 223, 225), (0, GAME_WIDTH_HEIGHT*BLOCK_SIZE, GAME_WIDTH_HEIGHT*BLOCK_SIZE, NN_VISUALIZE_WIDTH_HEIGHT * NN_VISUALIZE_SIZE))
 
         # Renders snake
         xy_list = self._snake.getSnakeXY()
@@ -182,7 +187,39 @@ class SnakeWindow:
         # Renders score
         self.renderText(str(self._snake.score), 5, 5)
 
+        # Renders neural network visualization
+        # Renders background
+        PADDING = 16
+        for i in range(0, GAME_WIDTH_HEIGHT):
+            for j in range(0, GAME_WIDTH_HEIGHT):
+                self.renderGrayBox(PADDING+NN_VISUALIZE_BLOCK_SIZE*i, PADDING+NN_VISUALIZE_BLOCK_SIZE*j)
+
+        for xy in xy_list:
+            self.renderWhiteBox(PADDING+xy[0]*NN_VISUALIZE_BLOCK_SIZE, PADDING+xy[1]*NN_VISUALIZE_BLOCK_SIZE)
+
         pygame.display.update()
+
+    # Generates a list of inputs for
+    def getInputs(self):
+        ret_list = []
+        temp_list = []
+        # Background
+        for x in range(0, GAME_WIDTH_HEIGHT):
+            for y in range(0, GAME_WIDTH_HEIGHT):
+                temp_list.append(NNObjects.Background)
+            ret_list.append(temp_list)
+            temp_list = []
+
+        # Snake Body, and head
+        xy_list = self._snake.getSnakeXY()
+        for xy in xy_list:
+            ret_list[xy[0]][xy[1]] = NNObjects.SnakeBody
+        ret_list[xy_list[0][0]][xy_list[0][1]] = NNObjects.SnakeHead
+
+        # Apple
+        ret_list[self._snake._apple.x][self._snake._apple.y] = NNObjects.Apple
+
+        return ret_list
 
 
 # Class instances
