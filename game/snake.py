@@ -75,6 +75,7 @@ def getAppleXY():
 ################################################ Neural Network and Genetic Algorithm ##################################################
 
 # Parameters for the network
+pool = None # Our pool variable
 Inputs = GAME_WIDTH*GAME_WIDTH # How many inputs are we supplying to the neural network
 Outputs = 4 # How many outputs do we have (in our case we have 4 outputs: up, down, left, or right)
 Output_Names = {0: 'Left', 1: 'Down', 2: 'Up', 3:'Right'}
@@ -99,6 +100,11 @@ EnableMutationChance = 0.2
 TimeoutConstant = 20
 
 MaxNodes = 2**32
+
+# TODO
+# Gets inputs for our neural network
+def getInputs():
+    return None
 
 # Neural Network Classes
 class Neuron:
@@ -400,8 +406,8 @@ class Pool:
 
 def newInnovation():
     global pool
-    pool.innovation += 1
-    return pool.innovation
+    pool.innovations += 1
+    return pool.innovations
 
 def crossover(g1, g2):
     if g2.fitness > g1.fitness:
@@ -602,16 +608,73 @@ def newGeneration():
 
     pool.generation = pool.generation + 1
 
+def evaluateCurrent():
+    global pool
+    species = pool.species[pool.currentSpecies]
+    genome = species.genomes[pool.currentGenome]
+
+    # TODO
+    inputs = None
+    # inputs = getInputs()
+    controller = genome.network.evaluateNetwork(inputs)
+
+    if controller['Left'] and controller['Right']:
+        controller['Left'] = False
+        controller['Right'] = False
+    if controller['Up'] and controller['Down']:
+        controller['Up'] = False
+        controller['Down'] = False
+
+    # TODO
+    # Joypad.set(controller)
+
+def initializeRun():
+    global pool
+
+    pool.currentFrame = 0
+    timeout = TimeoutConstant
+
+    # TODO
+    # clearjoypad()
+
+    species = pool.species[pool.currentSpecies]
+    genome = species.genomes[pool.currentGenome]
+
+    genome.network.generateNetwork(genome)
+
+def initializePool():
+    global pool
+    pool = Pool()
+
+    for i in range(0, Population):
+        basic = Genome()
+        basic.basicGenome()
+
+        addToSpecies(basic)
+
+    initializeRun()
+
+def nextGenome():
+    global pool
+    pool.currentGenome = pool.currentGenome + 1
+    if pool.currentGenome > len(pool.species[pool.currentSpecies].genomes):
+        pool.currentGenome = 1
+        pool.currentSpecies = pool.currentSpecies + 1
+        if pool.currentSpecies > len(pool.species):
+            newGeneration()
+            pool.currentSpecies =
+
+def fitnessAlreadyMeasured():
+    pass
 
 def sigmoid(x):
     return 1/(1+math.exp(-x))
 
-g = Genome()
-n = Network()
-n.generateNetwork(g)
+# Initializes our network pool
+if pool == None:
+    initializePool()
 
 ################################################ End Neural Network and Genetic Algorithm ##############################################
-
 
 # Game loop
 while True:
