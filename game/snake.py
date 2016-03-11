@@ -145,8 +145,11 @@ class SnakeWindow:
     def renderWhiteBox(self, x, y):
         self.window.blit(self.white_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
 
-    def renderNNVisText(self, s, x, y):
-        self.window.blit(self.font.render(s, True, (0, 0, 0,)), (x, y+GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+    def renderNNVisText(self, s, x, y, color):
+        self.window.blit(self.font.render(s, True, color), (x, y+GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+
+    def drawLine(self, xy1, xy2, color):
+        pygame.draw.lines(self.window, color, False, [xy1, xy2], 2)
 
     def update(self):
         # Key presses
@@ -197,12 +200,6 @@ class SnakeWindow:
             self.renderWhiteBox(PADDING+xy[0]*NN_VISUALIZE_BLOCK_SIZE, PADDING+xy[1]*NN_VISUALIZE_BLOCK_SIZE)
 
         self.renderWhiteBox(PADDING+self._snake._apple.x*NN_VISUALIZE_BLOCK_SIZE, PADDING+self._snake._apple.y*NN_VISUALIZE_BLOCK_SIZE)
-
-        # Text
-        self.renderNNVisText('Left', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1])
-        self.renderNNVisText('Down', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+20)
-        self.renderNNVisText('Up', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+40)
-        self.renderNNVisText('Right', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+60)
 
         pygame.display.update()
 

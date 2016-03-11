@@ -581,7 +581,7 @@ def initializePool():
     initializeRun()
 
 # TODO
-def displayNN(genomeVar):
+def displayNN(genomeVar, snakeWindowVar):
     network = genomeVar.network
     cells = {}
     i = 0
@@ -601,11 +601,64 @@ def displayNN(genomeVar):
 
         color = (245, 0, 245) if cell.value > 0 else (245, 0, 0)
 
-        # Draw text...
+        snakeWindowVar.renderNNVisText(Output_Names[i], DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+i*20, color)
+
+    for keys in network.neurons:
+        neuron = network.neurons[keys]
+
+        if keys > Inputs and keys <= MaxNodes:
+            cell = Cell(14, 4, neuron.value)
+            cells[keys] = cell
+
+    for n in range(0, 4):
+        for gene in genomeVar.genes:
+            if gene.enabled:
+                c1 = cells[gene.into]
+                c2 = cells[gene.out]
+
+                if gene.into > Inputs and gene.into <= MaxNodes:
+                    c1.x = 0.75*c1.x + 0.25*c2.x
+                    if c1.x >= c2.x:
+                        c1.x -= 4
+
+                    if c1.x < 9:
+                        c1.x = 9
+
+                    if c1.x > 22:
+                        c1.x = 22
+
+                    c1.y = 0.75*c1.y + 0.25*c2.y
+
+                if gene.out > Inputs and gene.out <= MaxNodes:
+                    c2.x = 0.25*c1.x + 0.75*c2.x
+                    if c1.x >= c2.x:
+                        c2.x = c2.x + 4
+                    if c2.x < 9:
+                        c2.x = 9
+                    if c2.x > 22:
+                        c2.x = 22
+                    c2.y = 0.25*c1.y+0.75*c2.y
 
 
+    for key in cells:
+        cell = cells[key]
+        if key > Inputs or cell.value != 0:
+            color = math.floor((cell.value+1)/2*256)
+            if color > 255:
+                snakeWindowVar.renderWhiteBox(cell.x-2, cell.y-2)
+
+            if color < 0:
+                snakeWindowVar.renderGrayBox(cell.x-2, cell.y-2)
 
 
+    for gene in genomeVar.genes:
+        if gene.enabled:
+            c1 = cells[gene.into]
+            c2 = cells[gene.out]
 
+            color = (0, 0, 0)
 
-    return
+            if gene.weight > 0:
+                color = (255, 255, 255)
+
+            snakeWindowVar.drawLine((c1.x+1,c1.y), (c2.x-3, c2.y), color)
