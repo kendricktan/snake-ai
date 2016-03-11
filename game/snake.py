@@ -117,7 +117,7 @@ class SnakeWindow:
         self.apple_img.fill((0, 255, 0))
 
         # Our font
-        self.font = pygame.font.SysFont('Arial', 20)
+        self.font = pygame.font.SysFont('Arial', 15)
 
         # Our game clock
         self.clock = pygame.time.Clock()
@@ -136,9 +136,6 @@ class SnakeWindow:
     def setSnake(self, snake):
         self._snake = snake
 
-    def initPyGame(self):
-        pass
-
     def renderText(self, s, x, y):
         self.window.blit(self.font.render(s, True, (0, 0, 0,)),(x, y))
 
@@ -148,19 +145,22 @@ class SnakeWindow:
     def renderWhiteBox(self, x, y):
         self.window.blit(self.white_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
 
+    def renderNNVisText(self, s, x, y):
+        self.window.blit(self.font.render(s, True, (0, 0, 0,)), (x, y+GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+
     def update(self):
         # Key presses
         for e in pygame.event.get():
             if e.type == QUIT:
                 sys.exit(0)
             elif e.type == KEYDOWN:
-                if e.key == K_UP:
+                if e.key == K_UP or e.key == K_w:
                     self._snake.setDirection(Directions.Up)
-                elif e.key == K_DOWN:
+                elif e.key == K_DOWN or e.key == K_s:
                     self._snake.setDirection(Directions.Down)
-                elif e.key == K_LEFT:
+                elif e.key == K_LEFT or e.key == K_a:
                     self._snake.setDirection(Directions.Left)
-                elif e.key == K_RIGHT:
+                elif e.key == K_RIGHT or e.key == K_d:
                     self._snake.setDirection(Directions.Right)
                 elif e.key == K_o:
                     self._snake.speed += 5
@@ -189,7 +189,6 @@ class SnakeWindow:
 
         # Renders neural network visualization
         # Renders background
-        PADDING = 16
         for i in range(0, GAME_WIDTH_HEIGHT):
             for j in range(0, GAME_WIDTH_HEIGHT):
                 self.renderGrayBox(PADDING+NN_VISUALIZE_BLOCK_SIZE*i, PADDING+NN_VISUALIZE_BLOCK_SIZE*j)
@@ -197,7 +196,16 @@ class SnakeWindow:
         for xy in xy_list:
             self.renderWhiteBox(PADDING+xy[0]*NN_VISUALIZE_BLOCK_SIZE, PADDING+xy[1]*NN_VISUALIZE_BLOCK_SIZE)
 
+        self.renderWhiteBox(PADDING+self._snake._apple.x*NN_VISUALIZE_BLOCK_SIZE, PADDING+self._snake._apple.y*NN_VISUALIZE_BLOCK_SIZE)
+
+        # Text
+        self.renderNNVisText('Left', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1])
+        self.renderNNVisText('Down', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+20)
+        self.renderNNVisText('Up', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+40)
+        self.renderNNVisText('Right', DIR_TEXT_LOC[0], DIR_TEXT_LOC[1]+60)
+
         pygame.display.update()
+
 
     # Generates a list of inputs for
     def getInputs(self):

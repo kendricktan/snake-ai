@@ -3,13 +3,14 @@ from enum import Enum
 # Game parameters
 
 # I like to play snake in a symmetrical window
-GAME_WIDTH_HEIGHT = 40
-NN_VISUALIZE_WIDTH_HEIGHT = 30
+GAME_WIDTH_HEIGHT = 30
+NN_VISUALIZE_WIDTH_HEIGHT = 20
 
 # Our blocksizes for the snake and apple
 BLOCK_SIZE = 10
 NN_VISUALIZE_SIZE = 5
-NN_VISUALIZE_BLOCK_SIZE = 3
+NN_VISUALIZE_BLOCK_SIZE = 2
+PADDING = 20
 
 # Inputs for the Neural network
 class NNObjects(Enum):
@@ -51,3 +52,12 @@ EnableMutationChance = 0.2
 TimeoutConstant = 20
 
 MaxNodes = 2**32
+
+class Cell:
+    def __init__(self, x, y, value):
+        self.x = x
+        self.y = y
+        self.value = value
+
+# Where to render our direction labels
+DIR_TEXT_LOC = (250, 10)

@@ -581,5 +581,31 @@ def initializePool():
     initializeRun()
 
 # TODO
-def displayNN():
-    pass
+def displayNN(genomeVar):
+    network = genomeVar.network
+    cells = {}
+    i = 0
+
+    for dy in range(-NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE):
+        for dx in range(-NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE):
+            cell = Cell(dx, dy, network.neurons[i].value)
+            cells[i] = cell
+            i = i+1
+
+    biasCell = Cell(8, 11, network.neurons[Inputs].value)
+    cells[Inputs] = biasCell
+
+    for i in range(0, Outputs):
+        cell = Cell(22, 30+8*i, network.neurons[MaxNodes+i].value)
+        cells[MaxNodes+i] = cell
+
+        color = (245, 0, 245) if cell.value > 0 else (245, 0, 0)
+
+        # Draw text...
+
+
+
+
+
+
+    return
