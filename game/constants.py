@@ -1,6 +1,8 @@
 from enum import Enum
 
 # Game parameters
+snake = None
+snakeWindow = None
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30

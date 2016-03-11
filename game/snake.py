@@ -1,14 +1,14 @@
-import pygame, random, sys
+import pygame, random, sys, constants
 from pygame.locals import *
-from constants import *
+from nn import *
 
 class Apple:
     def __init__(self):
         self.respawn()
 
     def respawn(self):
-        self.x = random.randint(0, GAME_WIDTH_HEIGHT - 1)
-        self.y = random.randint(0, GAME_WIDTH_HEIGHT - 1)
+        self.x = random.randint(0, constants.GAME_WIDTH_HEIGHT - 1)
+        self.y = random.randint(0, constants.GAME_WIDTH_HEIGHT - 1)
 
 
 class Snake:
@@ -46,13 +46,13 @@ class Snake:
             self.ys[i] = self.ys[i - 1]
 
         # Updates snake head
-        if self.dir is Directions.Down:
+        if self.dir is constants.Directions.Down:
             self.ys[0] += 1
-        elif self.dir is Directions.Up:
+        elif self.dir is constants.Directions.Up:
             self.ys[0] -= 1
-        elif self.dir is Directions.Right:
+        elif self.dir is constants.Directions.Right:
             self.xs[0] += 1
-        elif self.dir is Directions.Left:
+        elif self.dir is constants.Directions.Left:
             self.xs[0] -= 1
 
         if self.collideSelf():
@@ -78,13 +78,13 @@ class Snake:
         return False
 
     def exceedBoundaries(self):
-        if self.xs[0] < 0 or self.xs[0] >= GAME_WIDTH_HEIGHT or self.ys[0] < 0 or self.ys[0] >= GAME_WIDTH_HEIGHT:
+        if self.xs[0] < 0 or self.xs[0] >= constants.GAME_WIDTH_HEIGHT or self.ys[0] < 0 or self.ys[0] >= constants.GAME_WIDTH_HEIGHT:
             return True
         return False
 
     def reset(self):
         # Current Direction
-        self.dir = Directions.Down
+        self.dir = constants.Directions.Down
 
         # Snake speed
         self.speed = 10
@@ -101,19 +101,18 @@ class Snake:
 
 
 class SnakeWindow:
-    global GAME_WIDTH_HEIGHT, BLOCK_SIZE, NN_VISUALIZE_WIDTH_HEIGHT, NN_VISUALIZE_SIZE
 
     def __init__(self):
         pygame.init()
 
         # Creates our window and names it
-        self.window = pygame.display.set_mode((GAME_WIDTH_HEIGHT * BLOCK_SIZE, GAME_WIDTH_HEIGHT * BLOCK_SIZE + NN_VISUALIZE_WIDTH_HEIGHT * NN_VISUALIZE_SIZE))
+        self.window = pygame.display.set_mode((constants.GAME_WIDTH_HEIGHT * constants.BLOCK_SIZE, constants.GAME_WIDTH_HEIGHT * constants.BLOCK_SIZE + constants.NN_VISUALIZE_WIDTH_HEIGHT * constants.NN_VISUALIZE_SIZE))
         pygame.display.set_caption('snake-ai')
 
         # Renderer for snake and apple
-        self.snake_img = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+        self.snake_img = pygame.Surface((constants.BLOCK_SIZE, constants.BLOCK_SIZE))
         self.snake_img.fill((255, 0, 0))
-        self.apple_img = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+        self.apple_img = pygame.Surface((constants.BLOCK_SIZE, constants.BLOCK_SIZE))
         self.apple_img.fill((0, 255, 0))
 
         # Our font
@@ -123,12 +122,12 @@ class SnakeWindow:
         self.clock = pygame.time.Clock()
 
         # Our grey (but transparent) box
-        self.grey_box = pygame.Surface((NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE))
+        self.grey_box = pygame.Surface((constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE))
         #self.grey_box.set_alpha(100)
         self.grey_box.fill((189, 195, 199))
 
         # Our white box
-        self.white_box = pygame.Surface((NN_VISUALIZE_BLOCK_SIZE, NN_VISUALIZE_BLOCK_SIZE))
+        self.white_box = pygame.Surface((constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE))
         #self.white_box.set_alpha(100)
         self.grey_box.fill((255, 255, 255))
 
@@ -140,13 +139,13 @@ class SnakeWindow:
         self.window.blit(self.font.render(s, True, (0, 0, 0,)),(x, y))
 
     def renderGrayBox(self, x, y):
-        self.window.blit(self.grey_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
+        self.window.blit(self.grey_box, (x, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE+y))
 
     def renderWhiteBox(self, x, y):
-        self.window.blit(self.white_box, (x, GAME_WIDTH_HEIGHT*BLOCK_SIZE+y))
+        self.window.blit(self.white_box, (x, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE+y))
 
     def renderNNVisText(self, s, x, y, color):
-        self.window.blit(self.font.render(s, True, color), (x, y+GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+        self.window.blit(self.font.render(s, True, color), (x, y+constants.GAME_WIDTH_HEIGHT*BLOCK_SIZE))
 
     def drawLine(self, xy1, xy2, color):
         pygame.draw.lines(self.window, color, False, [xy1, xy2], 2)
@@ -158,13 +157,13 @@ class SnakeWindow:
                 sys.exit(0)
             elif e.type == KEYDOWN:
                 if e.key == K_UP or e.key == K_w:
-                    self._snake.setDirection(Directions.Up)
+                    self._snake.setDirection(constants.Directions.Up)
                 elif e.key == K_DOWN or e.key == K_s:
-                    self._snake.setDirection(Directions.Down)
+                    self._snake.setDirection(constants.Directions.Down)
                 elif e.key == K_LEFT or e.key == K_a:
-                    self._snake.setDirection(Directions.Left)
+                    self._snake.setDirection(constants.Directions.Left)
                 elif e.key == K_RIGHT or e.key == K_d:
-                    self._snake.setDirection(Directions.Right)
+                    self._snake.setDirection(constants.Directions.Right)
                 elif e.key == K_o:
                     self._snake.speed += 5
                 elif e.key == K_p:
@@ -176,30 +175,30 @@ class SnakeWindow:
                     print(self.getInputs())
 
         # Renders game and neural network visualize section
-        self.window.fill((255, 255, 255), (0, 0, GAME_WIDTH_HEIGHT*BLOCK_SIZE, GAME_WIDTH_HEIGHT*BLOCK_SIZE))
-        self.window.fill((218, 223, 225), (0, GAME_WIDTH_HEIGHT*BLOCK_SIZE, GAME_WIDTH_HEIGHT*BLOCK_SIZE, NN_VISUALIZE_WIDTH_HEIGHT * NN_VISUALIZE_SIZE))
+        self.window.fill((255, 255, 255), (0, 0, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE))
+        self.window.fill((218, 223, 225), (0, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE, constants.NN_VISUALIZE_WIDTH_HEIGHT * constants.NN_VISUALIZE_SIZE))
 
         # Renders snake
         xy_list = self._snake.getSnakeXY()
         for xy in xy_list:
-            self.window.blit(self.snake_img, (xy[0] * BLOCK_SIZE, xy[1] * BLOCK_SIZE))
+            self.window.blit(self.snake_img, (xy[0] * constants.BLOCK_SIZE, xy[1] * constants.BLOCK_SIZE))
 
         # Renders apple
-        self.window.blit(self.apple_img, (self._snake._apple.x*BLOCK_SIZE, self._snake._apple.y*BLOCK_SIZE))
+        self.window.blit(self.apple_img, (self._snake._apple.x*constants.BLOCK_SIZE, self._snake._apple.y*constants.BLOCK_SIZE))
 
         # Renders score
         self.renderText(str(self._snake.score), 5, 5)
 
         # Renders neural network visualization
         # Renders background
-        for i in range(0, GAME_WIDTH_HEIGHT):
-            for j in range(0, GAME_WIDTH_HEIGHT):
-                self.renderGrayBox(PADDING+NN_VISUALIZE_BLOCK_SIZE*i, PADDING+NN_VISUALIZE_BLOCK_SIZE*j)
+        for i in range(0, constants.GAME_WIDTH_HEIGHT):
+            for j in range(0, constants.GAME_WIDTH_HEIGHT):
+                self.renderGrayBox(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*i, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*j)
 
         for xy in xy_list:
-            self.renderWhiteBox(PADDING+xy[0]*NN_VISUALIZE_BLOCK_SIZE, PADDING+xy[1]*NN_VISUALIZE_BLOCK_SIZE)
+            self.renderWhiteBox(constants.PADDING+xy[0]*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+xy[1]*constants.NN_VISUALIZE_BLOCK_SIZE)
 
-        self.renderWhiteBox(PADDING+self._snake._apple.x*NN_VISUALIZE_BLOCK_SIZE, PADDING+self._snake._apple.y*NN_VISUALIZE_BLOCK_SIZE)
+        self.renderWhiteBox(constants.PADDING+self._snake._apple.x*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+self._snake._apple.y*constants.NN_VISUALIZE_BLOCK_SIZE)
 
         pygame.display.update()
 
@@ -209,38 +208,49 @@ class SnakeWindow:
         ret_list = []
         temp_list = []
         # Background
-        for x in range(0, GAME_WIDTH_HEIGHT):
-            for y in range(0, GAME_WIDTH_HEIGHT):
-                temp_list.append(NNObjects.Background)
+        for x in range(0, constants.GAME_WIDTH_HEIGHT):
+            for y in range(0, constants.GAME_WIDTH_HEIGHT):
+                temp_list.append(constants.NNObjects.Background)
             ret_list.append(temp_list)
             temp_list = []
 
         # Snake Body, and head
         xy_list = self._snake.getSnakeXY()
         for xy in xy_list:
-            ret_list[xy[0]][xy[1]] = NNObjects.SnakeBody
-        ret_list[xy_list[0][0]][xy_list[0][1]] = NNObjects.SnakeHead
+            ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody
+        ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead
 
         # Apple
-        ret_list[self._snake._apple.x][self._snake._apple.y] = NNObjects.Apple
+        ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple
 
-        return ret_list
+        # Final GAME_WIDTH_HEIGHT^2 list
+        final_list = []
+
+        for y_list in ret_list:
+            for y_item in y_list:
+                final_list.append(y_item)
+
+        return final_list
 
 
 # Class instances
-snake = Snake(Apple())
-snakeWindow = SnakeWindow()
-snakeWindow.setSnake(snake)
+constants.snake = Snake(Apple())
+constants.snakeWindow = SnakeWindow()
+constants.snakeWindow.setSnake(constants.snake)
+
+if constants.pool == None:
+    initializePool()
+
 
 while True:
     # Tick-tock
-    snakeWindow.clock.tick(snake.speed)
+    constants.snakeWindow.clock.tick(constants.snake.speed)
 
     # Update snake
-    still_alive = snake.update()
+    still_alive = constants.snake.update()
 
     if not still_alive:
-        snake.reset()
+        constants.snake.reset()
 
     # Update snake window
-    snakeWindow.update()
+    constants.snakeWindow.update()
