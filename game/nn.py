@@ -314,9 +314,8 @@ class Network:
         return outputs
 
 def newInnovation():
-    global pool
-    pool.innovation += 1
-    return pool.innovation
+    constants.pool.innovation += 1
+    return constants.pool.innovation
 
 def crossover(g1, g2):
     if g2.fitness > g2.fitness:
@@ -566,95 +565,18 @@ def initializeRun(poolVar):
     evaluateCurrent(poolVar)
 
 def initializePool():
-    global pool
-    pool = Pool()
+    constants.pool = Pool()
 
     for i in range(0, constants.Population):
         basic = Genome()
         basic.basicGenome()
 
-        addToSpecies(pool, basic)
+        addToSpecies(constants.pool, basic)
 
-    initializeRun(pool)
+    initializeRun(constants.pool)
 
-def displayNN(genomeVar, snakeWindowVar):
-    network = genomeVar.network
+def displayNN(genome, snakeWindowVar):
+    network = genome.network
     cells = {}
     i = 0
 
-    for dy in range(-constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE):
-        for dx in range(-constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE):
-            cell = constants.Cell(dx, dy, network.neurons[i].value)
-            cells[i] = cell
-            i = i+1
-
-    biasCell = constants.Cell(8, 11, network.neurons[constants.Inputs].value)
-    cells[constants.Inputs] = biasCell
-
-    for i in range(0, constants.Outputs):
-        cell = constants.Cell(22, 30+8*i, network.neurons[constants.MaxNodes+i].value)
-        cells[constants.MaxNodes+i] = cell
-
-        color = (245, 0, 245) if cell.value > 0 else (245, 0, 0)
-
-        snakeWindowVar.renderNNVisText(constants.constants.Output_Names[i], constants.DIR_TEXT_LOC[0], constants.DIR_TEXT_LOC[1]+i*20, color)
-
-    for keys in network.neurons:
-        neuron = network.neurons[keys]
-
-        if keys > constants.Inputs and keys <= constants.MaxNodes:
-            cell = constants.Cell(14, 4, neuron.value)
-            cells[keys] = cell
-
-    for n in range(0, 4):
-        for gene in genomeVar.genes:
-            if gene.enabled:
-                c1 = cells[gene.into]
-                c2 = cells[gene.out]
-
-                if gene.into > constants.Inputs and gene.into <= constants.MaxNodes:
-                    c1.x = 0.75*c1.x + 0.25*c2.x
-                    if c1.x >= c2.x:
-                        c1.x -= 4
-
-                    if c1.x < 9:
-                        c1.x = 9
-
-                    if c1.x > 22:
-                        c1.x = 22
-
-                    c1.y = 0.75*c1.y + 0.25*c2.y
-
-                if gene.out > constants.Inputs and gene.out <= constants.MaxNodes:
-                    c2.x = 0.25*c1.x + 0.75*c2.x
-                    if c1.x >= c2.x:
-                        c2.x = c2.x + 4
-                    if c2.x < 9:
-                        c2.x = 9
-                    if c2.x > 22:
-                        c2.x = 22
-                    c2.y = 0.25*c1.y+0.75*c2.y
-
-
-    for key in cells:
-        cell = cells[key]
-        if key > constants.Inputs or cell.value != 0:
-            color = math.floor((cell.value+1)/2*256)
-            if color > 255:
-                snakeWindowVar.renderWhiteBox(cell.x-2, cell.y-2)
-
-            if color < 0:
-                snakeWindowVar.renderGrayBox(cell.x-2, cell.y-2)
-
-
-    for gene in genomeVar.genes:
-        if gene.enabled:
-            c1 = cells[gene.into]
-            c2 = cells[gene.out]
-
-            color = (0, 0, 0)
-
-            if gene.weight > 0:
-                color = (255, 255, 255)
-
-            snakeWindowVar.drawLine((c1.x+1,c1.y), (c2.x-3, c2.y), color)

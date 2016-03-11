@@ -1,6 +1,5 @@
-import pygame, random, sys, constants
+import pygame, random, sys, constants, nn
 from pygame.locals import *
-from nn import *
 
 class Apple:
     def __init__(self):
@@ -145,7 +144,7 @@ class SnakeWindow:
         self.window.blit(self.white_box, (x, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE+y))
 
     def renderNNVisText(self, s, x, y, color):
-        self.window.blit(self.font.render(s, True, color), (x, y+constants.GAME_WIDTH_HEIGHT*BLOCK_SIZE))
+        self.window.blit(self.font.render(s, True, color), (x, y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE))
 
     def drawLine(self, xy1, xy2, color):
         pygame.draw.lines(self.window, color, False, [xy1, xy2], 2)
@@ -239,12 +238,20 @@ constants.snakeWindow = SnakeWindow()
 constants.snakeWindow.setSnake(constants.snake)
 
 if constants.pool == None:
-    initializePool()
+    nn.initializePool()
 
 
 while True:
     # Tick-tock
     constants.snakeWindow.clock.tick(constants.snake.speed)
+
+    ## Neural Network ##
+    species = constants.pool.species[constants.pool.currentSpecies]
+    genome = species.genomes[constants.pool.currentGenome]
+
+    nn.displayNN(genome, constants.snakeWindow)
+
+    nn.evaluateCurrent(constants.pool)
 
     # Update snake
     still_alive = constants.snake.update()

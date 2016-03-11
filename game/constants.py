@@ -53,7 +53,7 @@ EnableMutationChance = 0.2
 
 TimeoutConstant = 20
 
-MaxNodes = 2**32
+MaxNodes = 2**31
 
 class Cell:
     def __init__(self, x, y, value):
