@@ -575,8 +575,85 @@ def initializePool():
 
     initializeRun(constants.pool)
 
-def displayNN(genome, snakeWindowVar):
+def displayNN(genome, snakeWindowVar, pygameVar):
     network = genome.network
     cells = {}
     i = 0
 
+    for dy in range(-constants.NN_VISUALIZE_SIZE, constants.NN_VISUALIZE_SIZE):
+        for dx in range(-constants.NN_VISUALIZE_SIZE, constants.NN_VISUALIZE_SIZE):
+            cell = constants.Cell(175+5*dx, 7+5*dy, network.neurons[i].value)
+            cells[i] = cell
+            i += 1
+
+    biasCell = constants.Cell(195, 11, network.neurons[constants.Inputs-1].value)
+    cells[constants.Inputs-1] = biasCell
+
+    for i in range(0, constants.Outputs):
+        cell = constants.Cell(185, 3+8*i, network.neurons[constants.MaxNodes+i].value)
+        cells[constants.MaxNodes+i] = cell
+
+        if cell.value > 0:
+            color = (0, 0, 0)
+
+        else:
+            color = (180, 180, 180)
+
+        snakeWindowVar.renderNNVisText(constants.Output_Names[i], 230, 10+20*i, color)
+
+    for key in network.neurons:
+        if key >= constants.Inputs and key < constants.MaxNodes:
+            cell = constants.Cell(14, 4, network.neurons[key].value)
+            cells[key] = cell
+
+    for n in range(0, 4):
+        for gene in genome.genes:
+            if gene.enabled and gene.into in cells and gene.out in cells:
+                c1 = cells[gene.into]
+                c2 = cells[gene.out]
+
+
+                if gene.into >= constants.Inputs and gene.into < constants.MaxNodes:
+                    c1.x = 0.75*c1.x + 0.25*c2.x
+
+                    if c1.x >= c2.x:
+                        c1.x = c1.x - 4
+
+                    if c1.x < 9:
+                        c1.x = 9
+
+                    if c1.x > 22:
+                        c1.x = 22
+
+                    c1.y = 0.75*c1.y+0.25*c2.y
+
+                if gene.out >= constants.Inputs and gene.out < constants.MaxNodes:
+                    c2.x = 0.25*c1.x + 0.75*c2.x
+
+                    if c2.x >= c2.x:
+                        c1.x = c2.x + 4
+
+                    if c2.x < 9:
+                        c2.x = 9
+
+                    if c2.x > 22:
+                        c2.x = 22
+
+                    c2.y = 0.25*c1.y + 0.75*c2.y
+
+    for key in cells:
+        cell = cells[key]
+        if key >= constants.Inputs or cell.value is not constants.NNObjects.Background:
+            try:
+                color = math.floor((cell.value+1)/2*256)
+            except:
+                color = math.floor((cell.value.value+1)/2*256)
+
+            if color > 255:
+                snakeWindowVar.renderWhiteBox(cell.x-2, cell.y-2)
+            else:
+                snakeWindowVar.renderGrayBox(cell.x-2, cell.y-2)
+
+
+
+    pygameVar.display.update()

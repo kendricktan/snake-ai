@@ -1,4 +1,4 @@
-import pygame, random, sys, constants, nn
+import pygame, random, sys, constants, nn, threading
 from pygame.locals import *
 
 class Apple:
@@ -203,6 +203,7 @@ class SnakeWindow:
 
 
     # Generates a list of inputs for
+    # TODO DOESN'T RETURN APPLE, SNAKE HEAD, OR SNAKEBODY
     def getInputs(self):
         ret_list = []
         temp_list = []
@@ -215,9 +216,17 @@ class SnakeWindow:
 
         # Snake Body, and head
         xy_list = self._snake.getSnakeXY()
+
         for xy in xy_list:
-            ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody
-        ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead
+            try:
+                ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody
+            except:
+                pass
+        try:
+            ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead
+        except:
+            pass
+
 
         # Apple
         ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple
@@ -240,18 +249,9 @@ constants.snakeWindow.setSnake(constants.snake)
 if constants.pool == None:
     nn.initializePool()
 
-
 while True:
     # Tick-tock
     constants.snakeWindow.clock.tick(constants.snake.speed)
-
-    ## Neural Network ##
-    species = constants.pool.species[constants.pool.currentSpecies]
-    genome = species.genomes[constants.pool.currentGenome]
-
-    nn.displayNN(genome, constants.snakeWindow)
-
-    nn.evaluateCurrent(constants.pool)
 
     # Update snake
     still_alive = constants.snake.update()
@@ -261,3 +261,10 @@ while True:
 
     # Update snake window
     constants.snakeWindow.update()
+
+    ## Neural Network ##
+    species = constants.pool.species[constants.pool.currentSpecies]
+    genome = species.genomes[constants.pool.currentGenome]
+
+    nn.evaluateCurrent(constants.pool)
+    nn.displayNN(genome, constants.snakeWindow, pygame)
