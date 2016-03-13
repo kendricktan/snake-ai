@@ -1,4 +1,4 @@
-import pygame, random, sys, constants, nn, threading
+import pygame, random, sys, constants, nn, time
 from pygame.locals import *
 
 class Apple:
@@ -68,6 +68,8 @@ class Snake:
             self.xs.append(999)
             self.ys.append(999)
 
+        self.moves += 1
+
         return True
 
     def collideSelf(self):
@@ -86,7 +88,7 @@ class Snake:
         self.dir = constants.Directions.Down
 
         # Snake speed
-        self.speed = 10
+        self.speed = 250
 
         # Snake coordinates
         self.xs = [5, 5, 5, 5]
@@ -94,6 +96,9 @@ class Snake:
 
         # etc
         self.score = 0
+
+        # How many moves did we do
+        self.moves = 0
 
         if self._apple:
             self._apple.respawn()
@@ -128,7 +133,7 @@ class SnakeWindow:
         # Our white box
         self.white_box = pygame.Surface((constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE))
         #self.white_box.set_alpha(100)
-        self.grey_box.fill((255, 255, 255))
+        #self.grey_box.fill((255, 255, 255))
 
     # Sets our snake object
     def setSnake(self, snake):
@@ -228,8 +233,9 @@ class SnakeWindow:
             pass
 
 
+
         # Apple
-        ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple
+        #ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple
 
         # Final GAME_WIDTH_HEIGHT^2 list
         final_list = []
@@ -247,24 +253,46 @@ constants.snakeWindow = SnakeWindow()
 constants.snakeWindow.setSnake(constants.snake)
 
 if constants.pool == None:
-    nn.initializePool()
+    nn.initializePool(constants.snake)
+
+fitness = 0
 
 while True:
     # Tick-tock
     constants.snakeWindow.clock.tick(constants.snake.speed)
 
-    # Update snake
-    still_alive = constants.snake.update()
-
-    if not still_alive:
-        constants.snake.reset()
-
     # Update snake window
     constants.snakeWindow.update()
 
-    ## Neural Network ##
-    species = constants.pool.species[constants.pool.currentSpecies]
-    genome = species.genomes[constants.pool.currentGenome]
+    # Update snake
+    still_alive = constants.snake.update()
 
-    nn.evaluateCurrent(constants.pool)
-    nn.displayNN(genome, constants.snakeWindow, pygame)
+    ## Neural Network ##
+    if still_alive:
+        species = constants.pool.species[constants.pool.currentSpecies]
+        genome = species.genomes[constants.pool.currentGenome]
+
+        nn.evaluateCurrent(constants.pool, constants.snake)
+        nn.displayNN(genome, constants.snakeWindow, pygame)
+
+    else:
+        fitness = constants.snake.moves
+
+        if fitness == 0:
+            fitness = -1
+
+        genome.fitness = fitness
+
+        if fitness > constants.pool.maxFitness:
+            constants.pool.maxFitness = fitness
+
+        constants.pool.currentSpecies = 0
+        constants.pool.currentGenome = 0
+
+        while nn.fitnessAlreadyMeasured(constants.pool):
+            nn.nextGenome(constants.pool)
+        nn.initializeRun(constants.pool, constants.snake)
+
+        print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '\n\tfitness: ' + str(fitness))
+
+        constants.snake.reset()
