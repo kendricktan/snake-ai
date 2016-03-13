@@ -3,6 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
+GLOBAL_SPEED = 1000
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -17,8 +18,8 @@ PADDING = 20
 # Inputs for the Neural network
 class NNObjects(Enum):
     Background = 0
-    SnakeHead = 1
-    SnakeBody = 2
+    SnakeBody = 1
+    SnakeHead = 2
     Apple = 3
 
 class Directions(Enum):

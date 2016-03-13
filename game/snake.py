@@ -62,7 +62,7 @@ class Snake:
 
         if self.collide(self._apple.x, self._apple.y):
             self._apple.respawn()
-            if self.score <= 100:
+            if self.speed <= 100:
                 self.speed += 1
             self.score += 1
             self.xs.append(999)
@@ -88,7 +88,7 @@ class Snake:
         self.dir = constants.Directions.Down
 
         # Snake speed
-        self.speed = 250
+        self.speed = constants.GLOBAL_SPEED
 
         # Snake coordinates
         self.xs = [5, 5, 5, 5]
@@ -195,14 +195,14 @@ class SnakeWindow:
 
         # Renders neural network visualization
         # Renders background
-        for i in range(0, constants.GAME_WIDTH_HEIGHT):
-            for j in range(0, constants.GAME_WIDTH_HEIGHT):
-                self.renderGrayBox(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*i, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*j)
+        #for i in range(0, constants.GAME_WIDTH_HEIGHT):
+        #    for j in range(0, constants.GAME_WIDTH_HEIGHT):
+        #        self.renderGrayBox(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*i, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*j)
 
-        for xy in xy_list:
-            self.renderWhiteBox(constants.PADDING+xy[0]*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+xy[1]*constants.NN_VISUALIZE_BLOCK_SIZE)
+        #for xy in xy_list:
+        #    self.renderWhiteBox(constants.PADDING+xy[0]*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+xy[1]*constants.NN_VISUALIZE_BLOCK_SIZE)
 
-        self.renderWhiteBox(constants.PADDING+self._snake._apple.x*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+self._snake._apple.y*constants.NN_VISUALIZE_BLOCK_SIZE)
+        #self.renderWhiteBox(constants.PADDING+self._snake._apple.x*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+self._snake._apple.y*constants.NN_VISUALIZE_BLOCK_SIZE)
 
         pygame.display.update()
 
@@ -215,7 +215,7 @@ class SnakeWindow:
         # Background
         for x in range(0, constants.GAME_WIDTH_HEIGHT):
             for y in range(0, constants.GAME_WIDTH_HEIGHT):
-                temp_list.append(constants.NNObjects.Background)
+                temp_list.append(constants.NNObjects.Background.value)
             ret_list.append(temp_list)
             temp_list = []
 
@@ -224,13 +224,13 @@ class SnakeWindow:
 
         for xy in xy_list:
             try:
-                ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody
-            except:
+                ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody.value
+            except IndexError:
                 pass
-        try:
-            ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead
-        except:
-            pass
+        #try:
+        #    ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead.value
+        #except IndexError:
+        #    pass
 
 
 
@@ -253,7 +253,7 @@ constants.snakeWindow = SnakeWindow()
 constants.snakeWindow.setSnake(constants.snake)
 
 if constants.pool == None:
-    nn.initializePool(constants.snake)
+    nn.initializePool()
 
 fitness = 0
 
@@ -272,8 +272,8 @@ while True:
         species = constants.pool.species[constants.pool.currentSpecies]
         genome = species.genomes[constants.pool.currentGenome]
 
-        nn.evaluateCurrent(constants.pool, constants.snake)
-        nn.displayNN(genome, constants.snakeWindow, pygame)
+        nn.evaluateCurrent()
+        #nn.displayNN(genome, constants.snakeWindow, pygame)
 
     else:
         fitness = constants.snake.moves
@@ -281,6 +281,8 @@ while True:
         if fitness == 0:
             fitness = -1
 
+        species = constants.pool.species[constants.pool.currentSpecies]
+        genome = species.genomes[constants.pool.currentGenome]
         genome.fitness = fitness
 
         if fitness > constants.pool.maxFitness:
@@ -289,9 +291,9 @@ while True:
         constants.pool.currentSpecies = 0
         constants.pool.currentGenome = 0
 
-        while nn.fitnessAlreadyMeasured(constants.pool):
-            nn.nextGenome(constants.pool)
-        nn.initializeRun(constants.pool, constants.snake)
+        while nn.fitnessAlreadyMeasured():
+            nn.nextGenome()
+        nn.initializeRun()
 
         print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '\n\tfitness: ' + str(fitness))
 
