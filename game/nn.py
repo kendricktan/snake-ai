@@ -1,4 +1,5 @@
-import constants, math, random
+from pygame.locals import *
+import pygame, constants, math, random
 
 def sigmoid(x):
     return 2/(1+math.exp(-4.9*x))-1
@@ -82,6 +83,12 @@ class Neuron:
         self.incoming = []
         self.value = 0.0
 
+class Cell:
+    def __init__(self, x, y, value):
+        self.x = x
+        self.y = y
+        self.value = value
+
 def copyGenome(genome):
     genome_copy = Genome()
     genome_copy.genes.pop()
@@ -110,7 +117,7 @@ def basicGenome():
 def generateNetwork(genome):
     network = Network()
 
-    for i in range(0, constants.Inputs):
+    for i in range(0, constants.Inputs+1):
         network.neurons[i] = Neuron()
 
     for i in range(0, constants.Outputs):
@@ -135,7 +142,7 @@ def evaluateNetwork(network, inputs):
         print("Incorrect number of neural network inputs")
         return
 
-    for i in range(0, constants.Inputs):
+    for i in range(0, len(inputs)):
         network.neurons[i].value = inputs[i]
 
     for key in network.neurons:
@@ -558,3 +565,111 @@ def fitnessAlreadyMeasured():
 def newInnovation():
     constants.pool.innovation += 1
     return constants.pool.innovation
+
+def displayNN(genome):
+    network = genome.network
+    cells = {}
+
+    i = 0
+    for dx in range(0, constants.GAME_WIDTH_HEIGHT):
+        for dy in range(0, constants.GAME_WIDTH_HEIGHT):
+            cells[i] = Cell(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dx, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dy, network.neurons[i].value)
+            i += 1
+
+    biasCell = Cell(80, 5+constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dy, network.neurons[constants.Inputs].value)
+    cells[constants.Inputs] = biasCell
+
+    for i in range(0, constants.Outputs):
+        cells[constants.MaxNodes+i] = Cell(220, 20+20*i, network.neurons[constants.MaxNodes+i].value)
+
+        if cells[constants.MaxNodes+i].value > 0:
+            color = (0, 0, 0)
+        else:
+            color = (180, 180, 180)
+
+        constants.snakeWindow.renderNNVisText(constants.Output_Names[i], 230, 10+20*i, color)
+
+    for key in network.neurons:
+        neuron = network.neurons[key]
+        if key > constants.Inputs and key < constants.MaxNodes:
+            cells[key] = Cell(140, 40, neuron.value)
+
+    for gene in genome.genes:
+        if gene.enabled:
+            if gene.into in cells and gene.out in cells:
+                c1 = cells[gene.into]
+                c2 = cells[gene.out]
+
+                if gene.into > constants.Inputs and gene.out < constants.MaxNodes:
+                    c1.x = 0.75*c1.x + 0.25*c2.x
+
+                    if c1.x >= c2.x:
+                        c1.x = c1.x - 4
+
+                    if c1.x < 9:
+                        c1.x = 9
+
+                    if c1.x > 22:
+                        c1.x = 22
+
+                    c1.y = 0.75*c1.y+0.25*c2.y
+
+                if gene.out > constants.Inputs and gene.out < constants.MaxNodes:
+                    c2.x = 0.25*c1.x + 0.75*c2.x
+
+                    if c2.x >= c2.x:
+                        c1.x = c2.x + 4
+
+                    if c2.x < 9:
+                        c2.x = 9
+
+                    if c2.x > 22:
+                        c2.x = 22
+
+                    c2.y = 0.25*c1.y + 0.75*c2.y
+
+    for key in cells:
+        cell = cells[key]
+        if key > constants.Inputs:
+            color = math.floor((cell.value+1)/2*256)
+            if color > 255:
+                if cell.value > 0:
+                    color = (0, 255, 0)
+                else:
+                    color = (0, 150, 0)
+
+            else:
+                if cell.value > 0:
+                    color = (255, 0, 0)
+                else:
+                    color = (150, 0 ,0)
+
+            constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, color)
+
+        elif cell.value != 0:
+            color = math.floor((cell.value+1)/2*256)
+
+            if color > 255:
+                constants.snakeWindow.renderWhiteBox(cell.x, cell.y)
+            else:
+                constants.snakeWindow.renderGrayBox(cell.x, cell.y)
+
+    for gene in genome.genes:
+        if gene.enabled and gene.into in cells and gene.out in cells:
+            c1 = cells[gene.into]
+            c2 = cells[gene.out]
+
+            color = (255, 255, 255) # we know theres a connection there
+            if c1.value < 0:
+                if gene.weight < 0:
+
+                    color = (255, 0, 0) # negative connection
+            else:
+                if gene.weight > 0:
+                    color = (0, 255, 0) # positive connection
+
+
+            constants.snakeWindow.drawLine((c1.x,c1.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE),(c2.x,c2.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE), color)
+
+
+    pygame.display.update()

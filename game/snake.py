@@ -148,6 +148,11 @@ class SnakeWindow:
     def renderWhiteBox(self, x, y):
         self.window.blit(self.white_box, (x, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE+y))
 
+    def renderCustomColorBox(self, x, y, color):
+        custombox = pygame.Surface((constants.NN_VISUALIZE_BLOCK_SIZE, constants.NN_VISUALIZE_BLOCK_SIZE))
+        custombox.fill(color)
+        self.window.blit(custombox, (x, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE+y))
+
     def renderNNVisText(self, s, x, y, color):
         self.window.blit(self.font.render(s, True, color), (x, y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE))
 
@@ -273,7 +278,7 @@ while True:
         genome = species.genomes[constants.pool.currentGenome]
 
         nn.evaluateCurrent()
-        #nn.displayNN(genome, constants.snakeWindow, pygame)
+        nn.displayNN(genome)
 
     else:
         fitness = constants.snake.moves
