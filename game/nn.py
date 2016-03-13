@@ -1,5 +1,13 @@
 from pygame.locals import *
-import pygame, constants, math, random
+import pygame, constants, math, random, pickle
+
+def savePool(filename):
+    with open(filename, 'wb') as output:
+        pickle.dump(constants.pool, output, pickle.HIGHEST_PROTOCOL)
+
+def loadPool(filename):
+    with open(filename, 'rb') as input:
+        pickle.dump(constants.pool, input, pickle.HIGHEST_PROTOCOL)
 
 def sigmoid(x):
     return 2/(1+math.exp(-4.9*x))-1
@@ -37,7 +45,7 @@ class Species:
         self.topFitness = 0
         self.staleness = 0
         self.genomes = []
-        #self.genomes.append(Genome())
+        self.genomes.append(Genome())
         self.averageFitness = 0
 
 class Genome:
@@ -46,6 +54,7 @@ class Genome:
 
     def newGenome(self):
         self.genes = []
+        #self.genes.append(Genes())
         self.fitness = 0
         self.adjustedFitness = 0
         self.network = None
@@ -91,7 +100,7 @@ class Cell:
 
 def copyGenome(genome):
     genome_copy = Genome()
-    genome_copy.genes.pop()
+    #genome_copy.genes.pop()
     for gene in genome.genes:
         genome_copy.genes.append(gene)
     genome_copy.maxneuron = genome.maxneuron
@@ -183,13 +192,13 @@ def crossover(g1, g2):
 
     for gene1 in g1.genes:
         if gene1.innovation in innovations2 and random.randint(1, 2) == 1:
+            gene2 = innovations2[gene1.innovation]
             if gene2.enabled:
-                gene2 = innovations2[gene1.innovation]
                 child.genes.append(copyGene(gene2))
         else:
             child.genes.append(copyGene(gene1))
 
-    child.maxneuron = math.max(g1.maxneuron, g2.maxneuron)
+    child.maxneuron = max(g1.maxneuron, g2.maxneuron)
 
     for key in g1.mutationRates:
         child.mutationRates[key] = g1.mutationRates[key]
@@ -394,10 +403,10 @@ def rankGlobally():
     _global = []
 
     for species in constants.pool.species:
-        for genome in species:
+        for genome in species.genomes:
             _global.append(genome)
 
-    _global = sorted(_global, key=lambda g: g.fitness)
+    _global = sorted(_global, key=lambda g: g.fitness, reverse=True)
 
     for i in range(0, len(_global)):
         _global[i].globalRank = i
@@ -416,24 +425,26 @@ def totalAverageFitness():
     for species in constants.pool.species:
         total += species.averageFitness
 
+    print('average fitness:' + str(total))
     return total
 
 def cullSpecies(cutToOne):
     for species in constants.pool.species:
-        species = sorted(species.genomes, key=lambda g: g.fitness, reverse=True)
+        species.genomes = sorted(species.genomes, key=lambda g: g.fitness, reverse=True)
 
         remaining = int(math.ceil(len(species.genomes)/2))
 
         if cutToOne:
             remaining = 1
 
-        species.genomes = species.genomes[0:remaining]
+        while len(species.genomes) > remaining:
+            species.genomes.pop()
 
 def removeStaleSpecies():
     survived = []
 
     for species in constants.pool.species:
-        species = sorted(species.genomes, key=lambda g: g.fitness, reverse=True)
+        species.genomes = sorted(species.genomes, key=lambda g: g.fitness, reverse=True)
 
         if species.genomes[0].fitness > species.topFitness:
             species.topFitness = species.genomes[0].fitness
@@ -444,7 +455,7 @@ def removeStaleSpecies():
         if species.staleness < constants.StaleSpecies or species.topFitness >= constants.pool.maxFitness:
             survived.append(species)
 
-    constants.pool.species = species
+    constants.pool.species = survived
 
 def removeWeakSpecies():
     survived = []
@@ -469,6 +480,7 @@ def addToSpecies(child):
             species.genomes.append(child)
             foundSpecies = True
             break
+
     if not foundSpecies:
         childSpecies = Species()
         childSpecies.genomes.append(child)
@@ -508,6 +520,12 @@ def newGeneration():
         breed = math.floor(species.averageFitness/sum*constants.Population)-1
         for i in range(0, int(breed)):
             children.append(breedChild(species))
+
+    cullSpecies(True)
+
+    while len(children) + len(constants.pool.species) < constants.Population:
+        species = constants.pool.species[random.randint(0, len(constants.pool.species)-1)]
+        children.append(breedChild(species))
 
     for child in children:
         addToSpecies(child)
@@ -561,6 +579,7 @@ def fitnessAlreadyMeasured():
     genome = species.genomes[constants.pool.currentGenome]
 
     return genome.fitness != 0
+
 
 def newInnovation():
     constants.pool.innovation += 1
@@ -659,10 +678,13 @@ def displayNN(genome):
             c1 = cells[gene.into]
             c2 = cells[gene.out]
 
+            # Green = activated connection
+            # White = activate on stepping on it
+            # Red = negative on stepping on it
+
             color = (255, 255, 255) # we know theres a connection there
             if c1.value < 0:
                 if gene.weight < 0:
-
                     color = (255, 0, 0) # negative connection
             else:
                 if gene.weight > 0:

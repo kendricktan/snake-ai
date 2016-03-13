@@ -485,6 +485,7 @@ def totalAverageFitness(poolVar):
     for species in poolVar.species:
         total += species.averageFitness
 
+
     return total
 
 def removeWeakSpecies(poolVar):

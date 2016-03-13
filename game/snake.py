@@ -1,4 +1,4 @@
-import pygame, random, sys, constants, nn, time
+import pygame, random, sys, constants, nn, time, math
 from pygame.locals import *
 
 class Apple:
@@ -91,8 +91,9 @@ class Snake:
         self.speed = constants.GLOBAL_SPEED
 
         # Snake coordinates
-        self.xs = [5, 5, 5, 5]
-        self.ys = [9, 8, 7, 6]
+        CENTER_POINT = int(math.ceil(constants.GAME_WIDTH_HEIGHT/2))
+        self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT, CENTER_POINT]
+        self.ys = [0, 0, 0, 0]
 
         # etc
         self.score = 0
@@ -213,7 +214,6 @@ class SnakeWindow:
 
 
     # Generates a list of inputs for
-    # TODO DOESN'T RETURN APPLE, SNAKE HEAD, OR SNAKEBODY
     def getInputs(self):
         ret_list = []
         temp_list = []
@@ -272,6 +272,10 @@ while True:
     # Update snake
     still_alive = constants.snake.update()
 
+    #print('Current Species: ' + str(constants.pool.currentSpecies))
+    #print('Species length: ' + str(len(constants.pool.species)))
+    #print()
+
     ## Neural Network ##
     if still_alive:
         species = constants.pool.species[constants.pool.currentSpecies]
@@ -282,9 +286,6 @@ while True:
 
     else:
         fitness = constants.snake.moves
-
-        if fitness == 0:
-            fitness = -1
 
         species = constants.pool.species[constants.pool.currentSpecies]
         genome = species.genomes[constants.pool.currentGenome]
@@ -300,6 +301,16 @@ while True:
             nn.nextGenome()
         nn.initializeRun()
 
-        print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '\n\tfitness: ' + str(fitness))
+        measured = 0
+        total = 0
+
+        for species in constants.pool.species:
+            for genome in species.genomes:
+                total += 1
+                if genome.fitness != 0:
+                    measured = measured + 1
+
+        print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')\n\tfitness: ' + str(fitness))
 
         constants.snake.reset()
+
