@@ -183,6 +183,8 @@ class SnakeWindow:
                     self._snake.ys.append(999)
                 elif e.key == K_i:
                     print(self.getInputs())
+                elif e.key == K_s:
+                    nn.savePool('TEMP_POOL.dat')
 
         # Renders game and neural network visualize section
         self.window.fill((255, 255, 255), (0, 0, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE, constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE))
@@ -260,8 +262,6 @@ constants.snakeWindow.setSnake(constants.snake)
 if constants.pool == None:
     nn.initializePool()
 
-fitness = 0
-
 while True:
     # Tick-tock
     constants.snakeWindow.clock.tick(constants.snake.speed)
@@ -293,6 +293,7 @@ while True:
 
         if fitness > constants.pool.maxFitness:
             constants.pool.maxFitness = fitness
+            nn.savePool(str(fitness) + '_fitness_pool.dat')
 
         constants.pool.currentSpecies = 0
         constants.pool.currentGenome = 0
@@ -313,4 +314,3 @@ while True:
         print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')\n\tfitness: ' + str(fitness))
 
         constants.snake.reset()
-

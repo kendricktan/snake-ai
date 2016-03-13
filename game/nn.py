@@ -54,7 +54,7 @@ class Genome:
 
     def newGenome(self):
         self.genes = []
-        #self.genes.append(Genes())
+        self.genes.append(Genes())
         self.fitness = 0
         self.adjustedFitness = 0
         self.network = None
@@ -100,7 +100,7 @@ class Cell:
 
 def copyGenome(genome):
     genome_copy = Genome()
-    #genome_copy.genes.pop()
+    genome_copy.genes.pop()
     for gene in genome.genes:
         genome_copy.genes.append(gene)
     genome_copy.maxneuron = genome.maxneuron
@@ -119,7 +119,7 @@ def copyGene(gene):
 def basicGenome():
     genome = Genome()
     genome.maxneuron = constants.Inputs
-    # TODO
+
     mutate(genome)
     return genome
 
@@ -406,7 +406,7 @@ def rankGlobally():
         for genome in species.genomes:
             _global.append(genome)
 
-    _global = sorted(_global, key=lambda g: g.fitness, reverse=True)
+    _global = sorted(_global, key=lambda g: g.fitness)
 
     for i in range(0, len(_global)):
         _global[i].globalRank = i
@@ -425,7 +425,6 @@ def totalAverageFitness():
     for species in constants.pool.species:
         total += species.averageFitness
 
-    print('average fitness:' + str(total))
     return total
 
 def cullSpecies(cutToOne):
@@ -465,7 +464,8 @@ def removeWeakSpecies():
         if breed >= 1:
             survived.append(species)
 
-    constants.pool.species = survived
+    if len(survived) > 0:
+        constants.pool.species = survived
 
 def sameSpecies(genome1, genome2):
     dd = constants.DeltaDisjoint*disjoint(genome1.genes, genome2.genes)
@@ -678,17 +678,17 @@ def displayNN(genome):
             c1 = cells[gene.into]
             c2 = cells[gene.out]
 
-            # Green = activated connection
-            # White = activate on stepping on it
+            # white = activated connection
+            # Green = activate on stepping on it
             # Red = negative on stepping on it
 
-            color = (255, 255, 255) # we know theres a connection there
+            color = (0, 255, 0) # we know theres a connection there
             if c1.value < 0:
                 if gene.weight < 0:
                     color = (255, 0, 0) # negative connection
             else:
                 if gene.weight > 0:
-                    color = (0, 255, 0) # positive connection
+                    color = (255, 255, 255) # positive connection
 
 
             constants.snakeWindow.drawLine((c1.x,c1.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE),(c2.x,c2.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE), color)

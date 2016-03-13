@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 50
+GLOBAL_SPEED = 1000
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -34,7 +34,7 @@ pool = None # Our pool variable
 Inputs = GAME_WIDTH_HEIGHT*GAME_WIDTH_HEIGHT # How many inputs are we supplying to the neural network
 Outputs = 4 # How many outputs do we have (in our case we have 4 outputs: up, down, left, or right)
 Output_Names = {0: 'Left', 1: 'Down', 2: 'Up', 3:'Right'}
-Population = 300
+Population = 50
 DeltaDisjoint = 2.0
 DeltaWeights = 0.4
 DeltaThreshold = 1.0
