@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72116741-1325-4c9e-b06b-9bc9b5da7d3d" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/game/29_fitness_pool.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/game/31_fitness_pool.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/game/42_fitness_pool.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/game/58_fitness_pool.dat" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game/constants.py" afterPath="$PROJECT_DIR$/game/constants.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game/nn.py" afterPath="$PROJECT_DIR$/game/nn.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game/snake.py" afterPath="$PROJECT_DIR$/game/snake.py" />
     </list>
     <ignored path="snake-ai.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,10 +30,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="snake.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="snake.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/game/snake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.34177214">
+            <state vertical-scroll-proportion="0.0">
               <caret line="295" column="57" selection-start-line="295" selection-start-column="57" selection-end-line="295" selection-end-column="57" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
@@ -38,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nn.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game/nn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="467" column="8" selection-start-line="467" selection-start-column="8" selection-end-line="467" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.38291138">
+              <caret line="461" column="24" selection-start-line="461" selection-start-column="24" selection-end-line="461" selection-end-column="24" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -54,7 +58,7 @@
         <entry file="file://$PROJECT_DIR$/game/constants.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="15" selection-start-line="36" selection-start-column="15" selection-end-line="36" selection-end-column="15" />
+              <caret line="36" column="16" selection-start-line="36" selection-start-column="16" selection-end-line="36" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -70,9 +74,9 @@
       <list>
         <option value="$PROJECT_DIR$/game/snake_.py" />
         <option value="$PROJECT_DIR$/game/nn_.py" />
-        <option value="$PROJECT_DIR$/game/nn.py" />
-        <option value="$PROJECT_DIR$/game/constants.py" />
         <option value="$PROJECT_DIR$/game/snake.py" />
+        <option value="$PROJECT_DIR$/game/constants.py" />
+        <option value="$PROJECT_DIR$/game/nn.py" />
       </list>
     </option>
   </component>
@@ -302,7 +306,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27083334" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27083334" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16569921" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -551,30 +555,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/game/snake.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="295" column="57" selection-start-line="295" selection-start-column="57" selection-end-line="295" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/game/constants.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="15" selection-start-line="36" selection-start-column="15" selection-end-line="36" selection-end-column="15" />
+          <caret line="36" column="16" selection-start-line="36" selection-start-column="16" selection-end-line="36" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/game/nn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="467" column="8" selection-start-line="467" selection-start-column="8" selection-end-line="467" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.38291138">
+          <caret line="461" column="24" selection-start-line="461" selection-start-column="24" selection-end-line="461" selection-end-column="24" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/snake.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34177214">
-          <caret line="295" column="57" selection-start-line="295" selection-start-column="57" selection-end-line="295" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#53#0" expanded="true" />
           </folding>
         </state>
       </provider>

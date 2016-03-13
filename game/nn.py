@@ -454,7 +454,10 @@ def removeStaleSpecies():
         if species.staleness < constants.StaleSpecies or species.topFitness >= constants.pool.maxFitness:
             survived.append(species)
 
-    constants.pool.species = survived
+    if len(survived) > 0:
+        constants.pool.species = survived
+    else:
+        constants.pool.species.pop()
 
 def removeWeakSpecies():
     survived = []
@@ -466,6 +469,8 @@ def removeWeakSpecies():
 
     if len(survived) > 0:
         constants.pool.species = survived
+    else:
+        constants.pool.species.pop()
 
 def sameSpecies(genome1, genome2):
     dd = constants.DeltaDisjoint*disjoint(genome1.genes, genome2.genes)
