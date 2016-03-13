@@ -7,7 +7,7 @@ def savePool(filename):
 
 def loadPool(filename):
     with open(filename, 'rb') as input:
-        pickle.dump(constants.pool, input, pickle.HIGHEST_PROTOCOL)
+        constants.pool = pickle.load(input)
 
 def sigmoid(x):
     return 2/(1+math.exp(-4.9*x))-1

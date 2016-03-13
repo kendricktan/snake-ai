@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 1000
+GLOBAL_SPEED = 10
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30

@@ -199,18 +199,10 @@ class SnakeWindow:
         self.window.blit(self.apple_img, (self._snake._apple.x*constants.BLOCK_SIZE, self._snake._apple.y*constants.BLOCK_SIZE))
 
         # Renders score
-        self.renderText(str(self._snake.score), 5, 5)
+        self.renderText('Score: ' + str(self._snake.score), 230, 5)
 
-        # Renders neural network visualization
-        # Renders background
-        #for i in range(0, constants.GAME_WIDTH_HEIGHT):
-        #    for j in range(0, constants.GAME_WIDTH_HEIGHT):
-        #        self.renderGrayBox(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*i, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*j)
+        # Information on our neural network
 
-        #for xy in xy_list:
-        #    self.renderWhiteBox(constants.PADDING+xy[0]*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+xy[1]*constants.NN_VISUALIZE_BLOCK_SIZE)
-
-        #self.renderWhiteBox(constants.PADDING+self._snake._apple.x*constants.NN_VISUALIZE_BLOCK_SIZE, constants.PADDING+self._snake._apple.y*constants.NN_VISUALIZE_BLOCK_SIZE)
 
         pygame.display.update()
 
@@ -260,7 +252,12 @@ constants.snakeWindow = SnakeWindow()
 constants.snakeWindow.setSnake(constants.snake)
 
 if constants.pool == None:
-    nn.initializePool()
+    try:
+        nn.loadPool('136_fitness_pool.dat')
+        print('Loaded saved state')
+    except:
+        nn.initializePool()
+
 
 while True:
     # Tick-tock
@@ -272,9 +269,7 @@ while True:
     # Update snake
     still_alive = constants.snake.update()
 
-    #print('Current Species: ' + str(constants.pool.currentSpecies))
-    #print('Species length: ' + str(len(constants.pool.species)))
-    #print()
+    fitness = constants.snake.moves
 
     ## Neural Network ##
     if still_alive:
@@ -284,8 +279,23 @@ while True:
         nn.evaluateCurrent()
         nn.displayNN(genome)
 
+        measured = 0
+        total = 0
+
+        for species in constants.pool.species:
+            for genome in species.genomes:
+                total += 1
+                if genome.fitness != 0:
+                    measured = measured + 1
+
+        constants.snakeWindow.renderText('Gen: ' + str(constants.pool.generation), 5, 5)
+        constants.snakeWindow.renderText('species: ' + str(constants.pool.currentSpecies), 5, 25)
+        constants.snakeWindow.renderText('genome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')', 5, 45)
+        constants.snakeWindow.renderText('fitness: ' + str(fitness), 5, 65)
+
+        pygame.display.update()
+
     else:
-        fitness = constants.snake.moves
 
         species = constants.pool.species[constants.pool.currentSpecies]
         genome = species.genomes[constants.pool.currentGenome]
@@ -301,16 +311,5 @@ while True:
         while nn.fitnessAlreadyMeasured():
             nn.nextGenome()
         nn.initializeRun()
-
-        measured = 0
-        total = 0
-
-        for species in constants.pool.species:
-            for genome in species.genomes:
-                total += 1
-                if genome.fitness != 0:
-                    measured = measured + 1
-
-        print('Gen: ' + str(constants.pool.generation) + '\n\tspecies: ' + str(constants.pool.currentSpecies) + '\n\tgenome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')\n\tfitness: ' + str(fitness))
 
         constants.snake.reset()
