@@ -1,2 +1,11 @@
 # snake-ai
-AI to play a game of snake
+
+Machine learning for snake. Referencing SethBling's MarI/O algorithm
+
+![snake-ai](http://i.imgur.com/x1IFeTs.png)
+
+# Getting-started
+
+    python snake.py
+
+
