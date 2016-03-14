@@ -72,10 +72,12 @@ class Snake:
             if self.speed <= 100:
                 self.speed += 1
             self.score += 1
+            self.move_timeout = 0
             self.xs.append(999)
             self.ys.append(999)
 
         self.moves += 1
+        self.move_timeout += 1
 
         return True
 
@@ -107,6 +109,9 @@ class Snake:
 
         # How many moves did we do
         self.moves = 0
+
+        # Used to count maximum moves we do eat time we eat an apple
+        self.move_timeout = 0
 
         if self._apple:
             self._apple.respawn()
@@ -276,7 +281,7 @@ while True:
 
     # Time out, don't wanna run in an infinite loop
     if still_alive:
-        if constants.snake.moves == constants.TimeoutConstant:
+        if constants.snake.move_timeout == constants.MaxMoveConstants:
             still_alive = False
 
     fitness = constants.snake.score

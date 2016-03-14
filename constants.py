@@ -52,7 +52,7 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-TimeoutConstant = 75
+MaxMoveConstants = 175
 
 MaxNodes = 2**31
 
