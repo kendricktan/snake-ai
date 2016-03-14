@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 1000
+GLOBAL_SPEED = 10
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -20,7 +20,7 @@ class NNObjects(Enum):
     Background = -1
     SnakeBody = 1
     SnakeHead = 2
-    Apple = 1
+    Apple = 2
 
 class Directions(Enum):
     Left = -2
@@ -31,9 +31,9 @@ class Directions(Enum):
 # Neural Network parameters# Parameters for the network
 
 pool = None # Our pool variable
-Inputs = GAME_WIDTH_HEIGHT*GAME_WIDTH_HEIGHT # How many inputs are we supplying to the neural network
-Outputs = 4 # How many outputs do we have (in our case we have 4 outputs: up, down, left, or right)
-Output_Names = {0: 'Left', 1: 'Down', 2: 'Up', 3:'Right'}
+Inputs = 30 # Input 1 = Distance from us to food @ x axis, Input 2 = Distance from us to food @ x axis, Input 3-12 = 3x3 section of our left, Input 12-21 = 3x3 section of out right, Input 21-30 = 3x3 section infront of us
+Outputs = 3 # How many outputs do we have (in our case we have 3 outputs: left, right, or front)
+Output_Names = {0: 'Left', 1: 'Front', 2: 'Right'}
 Population = 300
 DeltaDisjoint = 2.0
 DeltaWeights = 0.4
@@ -52,7 +52,7 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-MaxMoveConstants = 175
+MaxMoveConstants = 375
 
 MaxNodes = 2**31
 

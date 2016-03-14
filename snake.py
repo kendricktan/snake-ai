@@ -31,6 +31,37 @@ class Snake:
             outlist.append((self.xs[i], self.ys[i]))
         return outlist
 
+    def moveDir(self, d):
+        if d['Left']:
+            if self.dir == constants.Directions.Up:
+                self.xs[0] -= 1
+            elif self.dir == constants.Directions.Down:
+                self.xs[0] += 1
+            elif self.dir == constants.Directions.Left:
+                self.ys[0] += 1
+            elif self.dir == constants.Directions.Right:
+                self.ys[0] -= 1
+        elif d['Right']:
+            if self.dir == constants.Directions.Up:
+                self.xs[0] += 1
+            elif self.dir == constants.Directions.Down:
+                self.xs[0] -= 1
+            elif self.dir == constants.Directions.Left:
+                self.ys[0] -= 1
+            elif self.dir == constants.Directions.Right:
+                self.ys[0] += 1
+        elif d['Front']:
+            if self.dir == constants.Directions.Down:
+                self.ys[0] += 1
+            elif self.dir == constants.Directions.Up:
+                self.ys[0] -= 1
+            elif self.dir == constants.Directions.Right:
+                self.xs[0] += 1
+            elif self.dir == constants.Directions.Left:
+                self.xs[0] -= 1
+
+        self.update()
+
     def setDirection(self, d):
         if d.value != self.dir.value * -1:
             self.dir = d
@@ -44,6 +75,7 @@ class Snake:
             self.xs[i] = self.xs[i - 1]
             self.ys[i] = self.ys[i - 1]
 
+        '''
         # Updates snake head
         if self.dir is constants.Directions.Down:
             self.ys[0] += 1
@@ -57,6 +89,10 @@ class Snake:
         if self.collideSelf():
             return False
 
+        if self.exceedBoundaries():
+            return False
+        '''
+        '''
         # Snake with portals
         if self.xs[0] < 0:
             self.xs[0] = constants.GAME_WIDTH_HEIGHT-1
@@ -66,6 +102,7 @@ class Snake:
             self.ys[0] = constants.GAME_WIDTH_HEIGHT-1
         elif self.ys[0] >= constants.GAME_WIDTH_HEIGHT:
             self.ys[0] = 0
+        '''
 
         if self.collide(self._apple.x, self._apple.y):
             self._apple.respawn()
@@ -78,6 +115,7 @@ class Snake:
 
         self.moves += 1
         self.move_timeout += 1
+        self.updates_no += 1
 
         return True
 
@@ -101,8 +139,8 @@ class Snake:
 
         # Snake coordinates
         CENTER_POINT = int(math.ceil(constants.GAME_WIDTH_HEIGHT/2))
-        self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT, CENTER_POINT]
-        self.ys = [0, 0, 0, 0]
+        self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT]
+        self.ys = [0, 0, 0]
 
         # etc
         self.score = 0
@@ -112,6 +150,9 @@ class Snake:
 
         # Used to count maximum moves we do eat time we eat an apple
         self.move_timeout = 0
+
+        # How many updates have we done
+        self.updates_no = 0
 
         if self._apple:
             self._apple.respawn()
@@ -213,9 +254,6 @@ class SnakeWindow:
         # Renders score
         self.renderText('Score: ' + str(self._snake.score), 230, 5)
 
-        # Information on our neural network
-
-
         pygame.display.update()
 
 
@@ -284,7 +322,7 @@ while True:
         if constants.snake.move_timeout == constants.MaxMoveConstants:
             still_alive = False
 
-    fitness = constants.snake.score
+    fitness = constants.snake.score*5+(constants.snake.moves)*0.001
 
     ## Neural Network ##
     if still_alive:

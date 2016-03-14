@@ -13,16 +13,7 @@ def sigmoid(x):
     return 2/(1+math.exp(-4.9*x))-1
 
 def snakeControl(output):
-    if constants.snake.dir == constants.Directions.Up or constants.snake.dir == constants.Directions.Down:
-        if output['Left']:
-            constants.snake.setDirection(constants.Directions.Left)
-        elif output['Right']:
-            constants.snake.setDirection(constants.Directions.Right)
-    else:
-        if output['Down']:
-            constants.snake.setDirection(constants.Directions.Down)
-        elif output['Up']:
-            constants.snake.setDirection(constants.Directions.Up)
+    constants.snake.moveDir(output)
 
 class Pool:
     def __init__(self):
@@ -544,14 +535,6 @@ def evaluateCurrent():
     inputs = constants.snakeWindow.getInputs()
     controller = evaluateNetwork(genome.network, inputs)
 
-    if controller['Left'] and controller['Right']:
-        controller['Left'] = False
-        controller['Right'] = False
-
-    if controller['Up'] and controller['Down']:
-        controller['Up'] = False
-        controller['Down'] = False
-
     snakeControl(controller)
 
 def initializeRun():
@@ -604,14 +587,14 @@ def displayNN(genome):
     cells[constants.Inputs] = biasCell
 
     for i in range(0, constants.Outputs):
-        cells[constants.MaxNodes+i] = Cell(220, 20+20*i, network.neurons[constants.MaxNodes+i].value)
+        cells[constants.MaxNodes+i] = Cell(220, 35+20*i, network.neurons[constants.MaxNodes+i].value)
 
         if cells[constants.MaxNodes+i].value > 0:
             color = (0, 0, 0)
         else:
             color = (180, 180, 180)
 
-        constants.snakeWindow.renderNNVisText(constants.Output_Names[i], 230, 10+20*i, color)
+        constants.snakeWindow.renderNNVisText(constants.Output_Names[i], 230, 25+20*i, color)
 
     for key in network.neurons:
         neuron = network.neurons[key]
