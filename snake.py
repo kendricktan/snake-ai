@@ -57,8 +57,15 @@ class Snake:
         if self.collideSelf():
             return False
 
-        if self.exceedBoundaries():
-            return False
+        # Snake with portals
+        if self.xs[0] < 0:
+            self.xs[0] = constants.GAME_WIDTH_HEIGHT-1
+        elif self.xs[0]>= constants.GAME_WIDTH_HEIGHT:
+            self.xs[0] = 0
+        elif self.ys[0] < 0:
+            self.ys[0] = constants.GAME_WIDTH_HEIGHT-1
+        elif self.ys[0] >= constants.GAME_WIDTH_HEIGHT:
+            self.ys[0] = 0
 
         if self.collide(self._apple.x, self._apple.y):
             self._apple.respawn()
@@ -231,10 +238,8 @@ class SnakeWindow:
         #except IndexError:
         #    pass
 
-
-
         # Apple
-        #ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple
+        ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple.value
 
         # Final GAME_WIDTH_HEIGHT^2 list
         final_list = []
@@ -253,7 +258,7 @@ constants.snakeWindow.setSnake(constants.snake)
 
 if constants.pool == None:
     try:
-        nn.loadPool('data/136_fitness_pool.dat')
+        nn.loadPool('data/example_network.dat')
         print('Loaded saved state')
     except:
         nn.initializePool()
@@ -269,7 +274,12 @@ while True:
     # Update snake
     still_alive = constants.snake.update()
 
-    fitness = constants.snake.moves
+    # Time out, don't wanna run in an infinite loop
+    if still_alive:
+        if constants.snake.moves == constants.TimeoutConstant:
+            still_alive = False
+
+    fitness = constants.snake.score
 
     ## Neural Network ##
     if still_alive:
@@ -300,6 +310,7 @@ while True:
         species = constants.pool.species[constants.pool.currentSpecies]
         genome = species.genomes[constants.pool.currentGenome]
         genome.fitness = fitness
+        nn.displayNN(genome)
 
         if fitness > constants.pool.maxFitness:
             constants.pool.maxFitness = fitness

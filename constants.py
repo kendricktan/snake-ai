@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 10
+GLOBAL_SPEED = 1000
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -20,7 +20,7 @@ class NNObjects(Enum):
     Background = -1
     SnakeBody = 1
     SnakeHead = 2
-    Apple = 3
+    Apple = 1
 
 class Directions(Enum):
     Left = -2
@@ -52,7 +52,7 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-TimeoutConstant = 20
+TimeoutConstant = 75
 
 MaxNodes = 2**31
 
