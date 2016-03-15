@@ -138,7 +138,7 @@ def generateNetwork(genome):
 
 def evaluateNetwork(network, inputs):
     inputs.append(1)
-    if len(inputs) != constants.Inputs+1:
+    if len(inputs) != constants.Inputs+2:
         print("Incorrect number of neural network inputs")
         return
 
@@ -601,12 +601,12 @@ def displayNN(genome):
 
     constants.snakeWindow.renderNNVisText('Top', 125, 25, (0, 0, 0))
     for j in range(0, constants.FRONT_DIMENSION_INPUTS):
-        cells[i] = Cell(135, 40+(j*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+        cells[i] = Cell(135, 45+(j*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
         i += 1
 
-    # Out bias cell
-    biasCell = Cell(15, 80, network.neurons[constants.Inputs].value)
-    cells[constants.Inputs] = biasCell
+    # Our bias cell
+    biasCell = Cell(5, 85, network.neurons[constants.Inputs+1].value)
+    cells[constants.Inputs+1] = biasCell
 
     # Displays our output
     for i in range(0, constants.Outputs):
@@ -621,7 +621,7 @@ def displayNN(genome):
 
     for key in network.neurons:
         neuron = network.neurons[key]
-        if key > constants.Inputs and key < constants.MaxNodes:
+        if key > constants.Inputs + 1 and key < constants.MaxNodes:
             cells[key] = Cell(150, 80, neuron.value)
 
     #Randomizing neuron positions
@@ -631,7 +631,7 @@ def displayNN(genome):
                 c1 = cells[gene.into]
                 c2 = cells[gene.out]
 
-                if gene.into > constants.Inputs and gene.out < constants.MaxNodes:
+                if gene.into > constants.Inputs+1 and gene.out < constants.MaxNodes:
                     c1.x = 1.05*c1.x
 
                     if c1.x >= c2.x:
@@ -661,7 +661,7 @@ def displayNN(genome):
 
     for key in cells:
         cell = cells[key]
-        if key > constants.Inputs and key <= constants.MaxNodes:
+        if key > constants.Inputs+1 and key <= constants.MaxNodes:
             color = math.floor((cell.value+1)/2*256)
             if color > 255:
                 if cell.value > 0:
@@ -680,7 +680,7 @@ def displayNN(genome):
         else:
             if cell.value > 0:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 255))
-            elif cell.value == -21:
+            elif cell.value == -2:
                 constants.snakeWindow.renderGrayBox(cell.x, cell.y)
             else:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 0))

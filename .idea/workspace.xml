@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ad2d459-9031-4a7c-bde4-14e12f6ab6fb" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/constants.py" afterPath="$PROJECT_DIR$/constants.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn.py" afterPath="$PROJECT_DIR$/nn.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snake.py" afterPath="$PROJECT_DIR$/snake.py" />
     </list>
     <ignored path="snake-ai.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="snake.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="snake.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/snake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="327" column="42" selection-start-line="327" selection-start-column="42" selection-end-line="327" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.6119403">
+              <caret line="328" column="41" selection-start-line="328" selection-start-column="41" selection-end-line="328" selection-end-column="41" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
               </folding>
@@ -35,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nn.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nn.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.39889196">
-              <caret line="682" column="33" selection-start-line="682" selection-start-column="33" selection-end-line="682" selection-end-column="33" />
+            <state vertical-scroll-proportion="-3.512195">
+              <caret line="140" column="40" selection-start-line="140" selection-start-column="40" selection-end-line="140" selection-end-column="40" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -51,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/constants.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+              <caret line="62" column="4" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -65,15 +68,15 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/snake.py" />
         <option value="$PROJECT_DIR$/constants.py" />
         <option value="$PROJECT_DIR$/nn.py" />
+        <option value="$PROJECT_DIR$/snake.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="27" />
-    <option name="width" value="683" />
+    <option name="width" value="1366" />
     <option name="height" value="741" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -296,7 +299,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="683" height="741" extended-state="5" />
+    <frame x="0" y="27" width="1366" height="741" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -402,27 +405,27 @@
     <entry file="file://$PROJECT_DIR$/constants.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+          <caret line="62" column="4" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="4" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/snake.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="327" column="42" selection-start-line="327" selection-start-column="42" selection-end-line="327" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#53#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39889196">
-          <caret line="682" column="33" selection-start-line="682" selection-start-column="33" selection-end-line="682" selection-end-column="33" />
+        <state vertical-scroll-proportion="-3.512195">
+          <caret line="140" column="40" selection-start-line="140" selection-start-column="40" selection-end-line="140" selection-end-column="40" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/snake.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6119403">
+          <caret line="328" column="41" selection-start-line="328" selection-start-column="41" selection-end-line="328" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#53#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -33,7 +33,7 @@ class Directions(Enum):
 pool = None # Our pool variable
 LEFT_DIMENSION_INPUTS = 3 # Inputs for our left dimension (ixi)
 RIGHT_DIMENSION_INPUTS = 3 # Inputs for out right dimension (ixi)
-FRONT_DIMENSION_INPUTS = 1 # Inputs for the front dimension (1xi)
+FRONT_DIMENSION_INPUTS = 3 # Inputs for the front dimension (1xi)
 
 # Input 0: (snake.x - apple.x)
 # Input 1: (snake.y - apple.y)

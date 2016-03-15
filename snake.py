@@ -298,16 +298,16 @@ class SnakeWindow:
         snake_y = self._snake.ys[0]
 
         # Our output list
-        outlist = []
+        outlist = [0]
         outlist.append(snake_x- self._snake._apple.x) # Distance from snake to apple @ x axis
         outlist.append(snake_y- self._snake._apple.y) # Distance from snake to apple @ y axis
 
         # CLOCKWISE FASHION @@
         # Left to rightgetInputs
 
-        # Left dimension
+         # Left dimension
         # -3 because we want to position the snake in the center
-        for dy in range(-1, constants.LEFT_DIMENSION_INPUTS-1):
+        for dy in range(0, constants.LEFT_DIMENSION_INPUTS):
             for dx in range(-constants.LEFT_DIMENSION_INPUTS, 0):
                 try:
                     temp_x = 999
@@ -321,11 +321,11 @@ class SnakeWindow:
                         temp_y = snake_y + dy
 
                     elif self._snake.dir == constants.Directions.Left:
-                        temp_x = snake_x + dy
+                        temp_x = snake_x - dy
                         temp_y = snake_y - dx
 
                     elif self._snake.dir == constants.Directions.Right:
-                        temp_x = snake_x - dy
+                        temp_x = snake_x + dy
                         temp_y = snake_y + dx
 
                     if temp_x < 0 or temp_y < 0:
@@ -337,26 +337,26 @@ class SnakeWindow:
                     outlist.append(constants.NNObjects.DeadEnd.value)
 
         # Right dimension
-        for dy in range(-1, constants.RIGHT_DIMENSION_INPUTS-1):
+        for dy in range(0, constants.RIGHT_DIMENSION_INPUTS):
             for dx in range(-constants.RIGHT_DIMENSION_INPUTS, 0):
                 try:
                     temp_x = 999
                     temp_y = 999
                     if self._snake.dir == constants.Directions.Up:
                         temp_x = snake_x - dx
-                        temp_y = snake_y + dy
-
-                    elif self._snake.dir == constants.Directions.Down:
-                        temp_x = snake_x + dx
                         temp_y = snake_y - dy
 
+                    elif self._snake.dir == constants.Directions.Down:
+                        temp_x = snake_x+ dx
+                        temp_y = snake_y+ dy
+
                     elif self._snake.dir == constants.Directions.Left:
-                        temp_x = snake_x - dy
-                        temp_y = snake_y + dx
+                        temp_x = snake_x- dy
+                        temp_y = snake_y+ dx
 
                     elif self._snake.dir == constants.Directions.Right:
-                        temp_x = snake_x + dy
-                        temp_y = snake_y - dx
+                        temp_x = snake_x+ dy
+                        temp_y = snake_y- dx
 
                     if temp_x < 0 or temp_y < 0:
                         raise IndexError
