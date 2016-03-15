@@ -584,18 +584,18 @@ def displayNN(genome):
     constants.snakeWindow.renderNNVisText('Left', 95, constants.PADDING-20, (0, 0, 0))
     for dx in range(0, constants.LEFT_DIMENSION_INPUTS):
         for dy in range(0, constants.LEFT_DIMENSION_INPUTS):
-            cells[i] = Cell(100+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+            cells[i] = Cell(95+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
             i += 1
 
     constants.snakeWindow.renderNNVisText('Right', 145, constants.PADDING-20, (0, 0, 0))
     for dx in range(0, constants.RIGHT_DIMENSION_INPUTS):
         for dy in range(0, constants.RIGHT_DIMENSION_INPUTS):
-            cells[i] = Cell(150+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+            cells[i] = Cell(155+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
             i += 1
 
-    constants.snakeWindow.renderNNVisText('Top', 120, 25, (0, 0, 0))
+    constants.snakeWindow.renderNNVisText('Top', 125, 25, (0, 0, 0))
     for j in range(0, constants.FRONT_DIMENSION_INPUTS):
-        cells[i] = Cell(130, 40+(j*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+        cells[i] = Cell(135, 40+(j*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
         i += 1
 
     # Out bias cell
@@ -616,7 +616,7 @@ def displayNN(genome):
     for key in network.neurons:
         neuron = network.neurons[key]
         if key > constants.Inputs and key < constants.MaxNodes:
-            cells[key] = Cell(140, 40, neuron.value)
+            cells[key] = Cell(150, 20, neuron.value)
 
     #Randomizing neuron positions
     for gene in genome.genes:
@@ -626,7 +626,7 @@ def displayNN(genome):
                 c2 = cells[gene.out]
 
                 if gene.into > constants.Inputs and gene.out < constants.MaxNodes:
-                    c1.x = 0.75*c1.x + 0.25*c2.x
+                    c1.x = 1.1*c1.x + 1.05*c2.x
 
                     if c1.x >= c2.x:
                         c1.x = c1.x - 4
@@ -637,10 +637,10 @@ def displayNN(genome):
                     if c1.x > 22:
                         c1.x = 22
 
-                    c1.y = 0.75*c1.y+0.25*c2.y
+                    c1.y = 1.1*c1.y+1.05*c2.y
 
                 if gene.out > constants.Inputs and gene.out < constants.MaxNodes:
-                    c2.x = 0.25*c1.x + 0.75*c2.x
+                    c2.x = 1.1*c1.x + 1.05*c2.x
 
                     if c2.x >= c2.x:
                         c1.x = c2.x + 4
@@ -651,7 +651,7 @@ def displayNN(genome):
                     if c2.x > 22:
                         c2.x = 22
 
-                    c2.y = 0.25*c1.y + 0.75*c2.y
+                    c2.y = 1.1*c1.y + 1.05*c2.y
 
     for key in cells:
         cell = cells[key]
@@ -698,6 +698,5 @@ def displayNN(genome):
 
 
             constants.snakeWindow.drawLine((c1.x,c1.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE),(c2.x,c2.y+constants.GAME_WIDTH_HEIGHT*constants.BLOCK_SIZE), color)
-
 
     pygame.display.update()

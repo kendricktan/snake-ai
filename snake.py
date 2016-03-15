@@ -152,8 +152,8 @@ class Snake:
 
         # Snake coordinates
         CENTER_POINT = int(math.ceil(constants.GAME_WIDTH_HEIGHT/2))
-        self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT]
-        self.ys = [3, 2, 1]
+        self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT, CENTER_POINT, CENTER_POINT]
+        self.ys = [5, 4, 3, 2, 1]
 
         # etc
         self.score = 0
@@ -414,7 +414,7 @@ while True:
     # Update snake window
     constants.snakeWindow.update()
 
-    fitness = constants.snake.score*5+(constants.snake.moves)*0.001
+    fitness = constants.snake.score*15+(constants.snake.moves)*0.01
 
     ## Neural Network ##
     species = constants.pool.species[constants.pool.currentSpecies]
