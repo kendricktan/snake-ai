@@ -153,8 +153,8 @@ def evaluateNetwork(network, inputs):
                 other = network.neurons[incoming.into]
                 sum += other.value
 
-        if len(neuron.incoming) > 0:
-            neuron.value = sigmoid(sum)
+        #if len(neuron.incoming) > 0:
+            #neuron.value = sigmoid(sum)
 
     outputs = {}
     for i in range(0, constants.Outputs):
@@ -594,8 +594,9 @@ def displayNN(genome):
             i += 1
 
     constants.snakeWindow.renderNNVisText('Top', 120, 25, (0, 0, 0))
-    for i in range(constants.RIGHT_DIMENSION_INPUTS_INDEX_END, constants.FRONT_DIMENSION_INPUTS_END):
-        cells[i] = Cell(120, 40+(i*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+    for j in range(0, constants.FRONT_DIMENSION_INPUTS):
+        cells[i] = Cell(130, 40+(j*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+        i += 1
 
     # Out bias cell
     biasCell = Cell(15, 80, network.neurons[constants.Inputs].value)
@@ -617,7 +618,7 @@ def displayNN(genome):
         if key > constants.Inputs and key < constants.MaxNodes:
             cells[key] = Cell(140, 40, neuron.value)
 
-    ''' Randomizing neuron positions
+    #Randomizing neuron positions
     for gene in genome.genes:
         if gene.enabled:
             if gene.into in cells and gene.out in cells:
@@ -651,11 +652,10 @@ def displayNN(genome):
                         c2.x = 22
 
                     c2.y = 0.25*c1.y + 0.75*c2.y
-    '''
 
     for key in cells:
         cell = cells[key]
-        if key > constants.Inputs:
+        if key > constants.Inputs and key <= constants.MaxNodes:
             color = math.floor((cell.value+1)/2*256)
             if color > 255:
                 if cell.value > 0:
@@ -674,8 +674,10 @@ def displayNN(genome):
         else:
             if cell.value > 0:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 255))
-            else:
+            elif cell.value == -1:
                 constants.snakeWindow.renderGrayBox(cell.x, cell.y)
+            else:
+                constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 0))
 
     for gene in genome.genes:
         if gene.enabled and gene.into in cells and gene.out in cells:

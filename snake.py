@@ -313,23 +313,27 @@ class SnakeWindow:
                     temp_x = 999
                     temp_y = 999
                     if self._snake.dir == constants.Directions.Up:
-                        temp_x = snake_x+ dx
-                        temp_y = snake_y- dy
+                        temp_x = snake_x + dx
+                        temp_y = snake_y - dy
 
                     elif self._snake.dir == constants.Directions.Down:
-                        temp_x = snake_x- dx
-                        temp_y = snake_y+ dy
+                        temp_x = snake_x - dx
+                        temp_y = snake_y + dy
 
                     elif self._snake.dir == constants.Directions.Left:
-                        temp_x = snake_x+ dy
-                        temp_y = snake_y- dx
+                        temp_x = snake_x + dy
+                        temp_y = snake_y - dx
 
                     elif self._snake.dir == constants.Directions.Right:
                         temp_x = snake_x- dy
                         temp_y = snake_y+ dx
 
+                    if temp_x < 0 or temp_y < 0:
+                        raise IndexError
+
                     outlist.append(game_list[temp_x][temp_y])
                 except IndexError: # If theres an index error then it'll be a dead end
+
                     outlist.append(constants.NNObjects.DeadEnd.value)
 
         # Right dimension
@@ -354,12 +358,15 @@ class SnakeWindow:
                         temp_x = snake_x+ dy
                         temp_y = snake_y- dx
 
+                    if temp_x < 0 or temp_y < 0:
+                        raise IndexError
+
                     outlist.append(game_list[temp_x][temp_y])
                 except IndexError: # If theres an index error then it'll be a dead end
                     outlist.append(constants.NNObjects.DeadEnd.value)
 
         # Front dimension
-        for i in range(0, constants.FRONT_DIMENSION_INPUTS):
+        for i in range(1, constants.FRONT_DIMENSION_INPUTS+1):
             try:
                 temp_x = snake_x
                 temp_y = snake_y
@@ -375,6 +382,9 @@ class SnakeWindow:
 
                 elif self._snake.dir == constants.Directions.Left:
                     temp_x = snake_x - i
+
+                if temp_x < 0 or temp_y < 0:
+                        raise IndexError
 
                 outlist.append(game_list[temp_x][temp_y])
 
