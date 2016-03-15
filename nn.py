@@ -153,8 +153,8 @@ def evaluateNetwork(network, inputs):
                 other = network.neurons[incoming.into]
                 sum += other.value
 
-        #if len(neuron.incoming) > 0:
-            #neuron.value = sigmoid(sum)
+        if len(neuron.incoming) > 0:
+            neuron.value = sigmoid(sum)
 
     outputs = {}
     for i in range(0, constants.Outputs):
