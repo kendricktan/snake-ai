@@ -66,7 +66,7 @@ class Genes:
 
     def newGene(self):
         self.into = 0
-        self.out = random.randint(constants.Inputs+2, constants.MaxNodes-1)
+        self.out = 0
         self.weight = 0.0
         self.enabled = True
         self.innovation = 0
@@ -117,7 +117,7 @@ def basicGenome():
 def generateNetwork(genome):
     network = Network()
 
-    for i in range(0, constants.Inputs+1):
+    for i in range(1, constants.Inputs+2):
         network.neurons[i] = Neuron()
 
     for i in range(0, constants.Outputs):
@@ -142,7 +142,7 @@ def evaluateNetwork(network, inputs):
         print("Incorrect number of neural network inputs")
         return
 
-    for i in range(0, len(inputs)):
+    for i in range(1, len(inputs)):
         network.neurons[i].value = inputs[i]
 
     for key in network.neurons:
@@ -581,7 +581,7 @@ def displayNN(genome):
     cells = {}
 
     # Display our inputs
-    i = 0
+    i = 1
     for x in range(0, 2):
         cells[i] = Cell(50, 25+(i*20), network.neurons[i].value)
         constants.snakeWindow.renderNNVisText(str(math.ceil(cells[i].value)), cells[i].x-40, cells[i].y-7, (0, 0, 0))
