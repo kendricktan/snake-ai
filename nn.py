@@ -680,7 +680,7 @@ def displayNN(genome):
         else:
             if cell.value > 0:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 255))
-            elif cell.value == -1:
+            elif cell.value == -21:
                 constants.snakeWindow.renderGrayBox(cell.x, cell.y)
             else:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 0))
