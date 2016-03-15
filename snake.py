@@ -307,7 +307,7 @@ class SnakeWindow:
 
         # Left dimension
         # -3 because we want to position the snake in the center
-        for dy in range(1, constants.LEFT_DIMENSION_INPUTS+1):
+        for dy in range(0, constants.LEFT_DIMENSION_INPUTS):
             for dx in range(-constants.LEFT_DIMENSION_INPUTS, 0):
                 try:
                     temp_x = 999
@@ -337,7 +337,7 @@ class SnakeWindow:
                     outlist.append(constants.NNObjects.DeadEnd.value)
 
         # Right dimension
-        for dy in range(1, constants.RIGHT_DIMENSION_INPUTS+1):
+        for dy in range(0, constants.RIGHT_DIMENSION_INPUTS):
             for dx in range(-constants.RIGHT_DIMENSION_INPUTS, 0):
                 try:
                     temp_x = 999

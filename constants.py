@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 1000
+GLOBAL_SPEED = 5
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -33,7 +33,7 @@ class Directions(Enum):
 pool = None # Our pool variable
 LEFT_DIMENSION_INPUTS = 1 # Inputs for our left dimension (ixi)
 RIGHT_DIMENSION_INPUTS = 1 # Inputs for out right dimension (ixi)
-FRONT_DIMENSION_INPUTS = 3 # Inputs for the front dimension (1xi)
+FRONT_DIMENSION_INPUTS = 1 # Inputs for the front dimension (1xi)
 
 # Input 0: (snake.x - apple.x)
 # Input 1: (snake.y - apple.y)
