@@ -436,14 +436,16 @@ def removeStaleSpecies():
     for species in constants.pool.species:
         species.genomes = sorted(species.genomes, key=lambda g: g.fitness, reverse=True)
 
-        if species.genomes[0].fitness > species.topFitness:
-            species.topFitness = species.genomes[0].fitness
-            species.staleness = 0
-        else:
-            species.staleness = species.staleness + 1
+        if len(species.genomes) > 0:
 
-        if species.staleness < constants.StaleSpecies or species.topFitness >= constants.pool.maxFitness:
-            survived.append(species)
+            if species.genomes[0].fitness > species.topFitness:
+                species.topFitness = species.genomes[0].fitness
+                species.staleness = 0
+            else:
+                species.staleness = species.staleness + 1
+
+            if species.staleness < constants.StaleSpecies or species.topFitness >= constants.pool.maxFitness:
+                survived.append(species)
 
     if len(survived) > 0:
         constants.pool.species = survived
