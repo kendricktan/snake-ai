@@ -12,9 +12,6 @@ def loadPool(filename):
 def sigmoid(x):
     return 2/(1+math.exp(-4.9*x))-1
 
-def snakeControl(output):
-    constants.snake.moveDir(output)
-
 class Pool:
     def __init__(self):
         self.newPool()
@@ -535,7 +532,7 @@ def evaluateCurrent():
     inputs = constants.snakeWindow.getInputs()
     controller = evaluateNetwork(genome.network, inputs)
 
-    snakeControl(controller)
+    return controller
 
 def initializeRun():
     species = constants.pool.species[constants.pool.currentSpecies]
@@ -577,15 +574,34 @@ def displayNN(genome):
     network = genome.network
     cells = {}
 
+    # Display our inputs
     i = 0
-    for dx in range(0, constants.GAME_WIDTH_HEIGHT):
-        for dy in range(0, constants.GAME_WIDTH_HEIGHT):
-            cells[i] = Cell(constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dx, constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dy, network.neurons[i].value)
+    for x in range(0, 2):
+        cells[i] = Cell(50, 25+(i*20), network.neurons[i].value)
+        constants.snakeWindow.renderNNVisText(str(math.ceil(cells[i].value)), cells[i].x-40, cells[i].y-7, (0, 0, 0))
+        i += 1
+
+    constants.snakeWindow.renderNNVisText('Left', 95, constants.PADDING-20, (0, 0, 0))
+    for dx in range(0, constants.LEFT_DIMENSION_INPUTS):
+        for dy in range(0, constants.LEFT_DIMENSION_INPUTS):
+            cells[i] = Cell(100+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
             i += 1
 
-    biasCell = Cell(80, 5+constants.PADDING+constants.NN_VISUALIZE_BLOCK_SIZE*dy, network.neurons[constants.Inputs].value)
+    constants.snakeWindow.renderNNVisText('Right', 145, constants.PADDING-20, (0, 0, 0))
+    for dx in range(0, constants.RIGHT_DIMENSION_INPUTS):
+        for dy in range(0, constants.RIGHT_DIMENSION_INPUTS):
+            cells[i] = Cell(150+(dx*constants.NN_VISUALIZE_SIZE), constants.PADDING+(dy*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+            i += 1
+
+    constants.snakeWindow.renderNNVisText('Top', 120, 25, (0, 0, 0))
+    for i in range(constants.RIGHT_DIMENSION_INPUTS_INDEX_END, constants.FRONT_DIMENSION_INPUTS_END):
+        cells[i] = Cell(120, 40+(i*constants.NN_VISUALIZE_SIZE), network.neurons[i].value)
+
+    # Out bias cell
+    biasCell = Cell(15, 80, network.neurons[constants.Inputs].value)
     cells[constants.Inputs] = biasCell
 
+    # Displays our output
     for i in range(0, constants.Outputs):
         cells[constants.MaxNodes+i] = Cell(220, 35+20*i, network.neurons[constants.MaxNodes+i].value)
 
@@ -601,6 +617,7 @@ def displayNN(genome):
         if key > constants.Inputs and key < constants.MaxNodes:
             cells[key] = Cell(140, 40, neuron.value)
 
+    ''' Randomizing neuron positions
     for gene in genome.genes:
         if gene.enabled:
             if gene.into in cells and gene.out in cells:
@@ -634,6 +651,7 @@ def displayNN(genome):
                         c2.x = 22
 
                     c2.y = 0.25*c1.y + 0.75*c2.y
+    '''
 
     for key in cells:
         cell = cells[key]
@@ -653,13 +671,14 @@ def displayNN(genome):
 
             constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, color)
 
-        elif cell.value != 0:
-            color = math.floor((cell.value+1)/2*256)
+        else:
+            if cell.value != 0:
+                constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 255))
 
-            if color > 255:
-                constants.snakeWindow.renderWhiteBox(cell.x, cell.y)
-            else:
-                constants.snakeWindow.renderGrayBox(cell.x, cell.y)
+                #if color > 0:
+                #    constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 255, 0))
+                #else:
+                #    constants.snakeWindow.renderGrayBox(cell.x, cell.y)
 
     for gene in genome.genes:
         if gene.enabled and gene.into in cells and gene.out in cells:

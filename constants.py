@@ -12,14 +12,14 @@ NN_VISUALIZE_WIDTH_HEIGHT = 20
 # Our blocksizes for the snake and apple
 BLOCK_SIZE = 10
 NN_VISUALIZE_SIZE = 5
-NN_VISUALIZE_BLOCK_SIZE = 2
+NN_VISUALIZE_BLOCK_SIZE = 5
 PADDING = 20
 
 # Inputs for the Neural network
 class NNObjects(Enum):
+    DeadEnd = -2
     Background = -1
     SnakeBody = 1
-    SnakeHead = 2
     Apple = 2
 
 class Directions(Enum):
@@ -31,9 +31,22 @@ class Directions(Enum):
 # Neural Network parameters# Parameters for the network
 
 pool = None # Our pool variable
-Inputs = 30 # Input 1 = Distance from us to food @ x axis, Input 2 = Distance from us to food @ x axis, Input 3-12 = 3x3 section of our left, Input 12-21 = 3x3 section of out right, Input 21-30 = 3x3 section infront of us
+LEFT_DIMENSION_INPUTS = 3 # Inputs for our left dimension (ixi)
+RIGHT_DIMENSION_INPUTS = 3 # Inputs for out right dimension (ixi)
+FRONT_DIMENSION_INPUTS = 3 # Inputs for the front dimension (1xi)
+
+# Input 0: (snake.x - apple.x)
+# Input 1: (snake.y - apple.y)
+# Input 2-(2+LEFT_DIMENSION_INPUTS**2): (ixi) dimension input of the snake's right area
+# Inputs (2+LEFT_DIMENSION_INPUTS**2)+1 - ((2+LEFT_DIMENSION_INPUTS**2)+(RIGHT_DIMENSION_INPUTS**2)): (ixi) dimension inputs of the snake's left area
+# Inputs n: (1xi) dimensional input of the snake front area
+LEFT_DIMENSION_INPUTS_INDEX_END = (2+LEFT_DIMENSION_INPUTS**2)
+RIGHT_DIMENSION_INPUTS_INDEX_END = (1+LEFT_DIMENSION_INPUTS_INDEX_END+(RIGHT_DIMENSION_INPUTS**2))
+FRONT_DIMENSION_INPUTS_END = RIGHT_DIMENSION_INPUTS_INDEX_END+FRONT_DIMENSION_INPUTS
+Inputs = 2 + (LEFT_DIMENSION_INPUTS**2) + (RIGHT_DIMENSION_INPUTS**2) + (FRONT_DIMENSION_INPUTS)
+
 Outputs = 3 # How many outputs do we have (in our case we have 3 outputs: left, right, or front)
-Output_Names = {0: 'Left', 1: 'Front', 2: 'Right'}
+Output_Names = {0: 'Left', 1: 'Right', 2: 'Front'}
 Population = 300
 DeltaDisjoint = 2.0
 DeltaWeights = 0.4
@@ -52,8 +65,8 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-MaxMoveConstants = 375
-
+MaxMoveConstants = 100
+MaxUpdateConstants = 100
 MaxNodes = 2**31
 
 class Cell:

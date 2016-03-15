@@ -35,32 +35,44 @@ class Snake:
         if d['Left']:
             if self.dir == constants.Directions.Up:
                 self.xs[0] -= 1
+                self.dir = constants.Directions.Left
             elif self.dir == constants.Directions.Down:
                 self.xs[0] += 1
+                self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Left:
                 self.ys[0] += 1
+                self.dir = constants.Directions.Down
             elif self.dir == constants.Directions.Right:
                 self.ys[0] -= 1
+                self.dir = constants.Directions.Up
         elif d['Right']:
             if self.dir == constants.Directions.Up:
                 self.xs[0] += 1
+                self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Down:
                 self.xs[0] -= 1
+                self.dir = constants.Directions.Left
             elif self.dir == constants.Directions.Left:
                 self.ys[0] -= 1
+                self.dir = constants.Directions.Up
             elif self.dir == constants.Directions.Right:
                 self.ys[0] += 1
+                self.dir = constants.Directions.Down
         elif d['Front']:
             if self.dir == constants.Directions.Down:
                 self.ys[0] += 1
+                self.dir = constants.Directions.Down
             elif self.dir == constants.Directions.Up:
                 self.ys[0] -= 1
+                self.dir = constants.Directions.Up
             elif self.dir == constants.Directions.Right:
                 self.xs[0] += 1
+                self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Left:
                 self.xs[0] -= 1
+                self.dir = constants.Directions.Left
 
-        self.update()
+        return self.update()
 
     def setDirection(self, d):
         if d.value != self.dir.value * -1:
@@ -75,8 +87,8 @@ class Snake:
             self.xs[i] = self.xs[i - 1]
             self.ys[i] = self.ys[i - 1]
 
-        '''
         # Updates snake head
+        '''
         if self.dir is constants.Directions.Down:
             self.ys[0] += 1
         elif self.dir is constants.Directions.Up:
@@ -85,13 +97,14 @@ class Snake:
             self.xs[0] += 1
         elif self.dir is constants.Directions.Left:
             self.xs[0] -= 1
+        '''
 
         if self.collideSelf():
             return False
 
         if self.exceedBoundaries():
             return False
-        '''
+
         '''
         # Snake with portals
         if self.xs[0] < 0:
@@ -109,12 +122,13 @@ class Snake:
             if self.speed <= 100:
                 self.speed += 1
             self.score += 1
-            self.move_timeout = 0
+            self.move_no = 0
+            self.updates_no = 0
             self.xs.append(999)
             self.ys.append(999)
 
         self.moves += 1
-        self.move_timeout += 1
+        self.move_no += 1
         self.updates_no += 1
 
         return True
@@ -140,7 +154,7 @@ class Snake:
         # Snake coordinates
         CENTER_POINT = int(math.ceil(constants.GAME_WIDTH_HEIGHT/2))
         self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT]
-        self.ys = [0, 0, 0]
+        self.ys = [2, 1, 0]
 
         # etc
         self.score = 0
@@ -149,7 +163,7 @@ class Snake:
         self.moves = 0
 
         # Used to count maximum moves we do eat time we eat an apple
-        self.move_timeout = 0
+        self.move_no = 0
 
         # How many updates have we done
         self.updates_no = 0
@@ -259,13 +273,14 @@ class SnakeWindow:
 
     # Generates a list of inputs for
     def getInputs(self):
-        ret_list = []
+        # Our list to get out from
         temp_list = []
+        game_list = []
         # Background
         for x in range(0, constants.GAME_WIDTH_HEIGHT):
             for y in range(0, constants.GAME_WIDTH_HEIGHT):
                 temp_list.append(constants.NNObjects.Background.value)
-            ret_list.append(temp_list)
+            game_list.append(temp_list)
             temp_list = []
 
         # Snake Body, and head
@@ -273,25 +288,99 @@ class SnakeWindow:
 
         for xy in xy_list:
             try:
-                ret_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody.value
+                game_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody.value
             except IndexError:
                 pass
-        #try:
-        #    ret_list[xy_list[0][0]][xy_list[0][1]] = constants.NNObjects.SnakeHead.value
-        #except IndexError:
-        #    pass
 
-        # Apple
-        ret_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple.value
+        # Snake variables
+        snake_x = self._snake.xs[0]
+        snake_y = self._snake.ys[0]
 
-        # Final GAME_WIDTH_HEIGHT^2 list
-        final_list = []
+        # Our output list
+        outlist = []
+        outlist.append(snake_x- self._snake._apple.x) # Distance from snake to apple @ x axis
+        outlist.append(snake_y- self._snake._apple.y) # Distance from snake to apple @ y axis
 
-        for y_list in ret_list:
-            for y_item in y_list:
-                final_list.append(y_item)
+        # CLOCKWISE FASHION @@
+        # Left to rightgetInputs
 
-        return final_list
+        # Left dimension
+        # -3 because we want to position the snake in the center
+        for dy in range(-1, constants.LEFT_DIMENSION_INPUTS-1):
+            for dx in range(-constants.LEFT_DIMENSION_INPUTS, 0):
+                try:
+                    temp_x = 999
+                    temp_y = 999
+                    if self._snake.dir == constants.Directions.Up:
+                        temp_x = snake_x+ dx
+                        temp_y = snake_y- dy
+
+                    elif self._snake.dir == constants.Directions.Down:
+                        temp_x = snake_x- dx
+                        temp_y = snake_y+ dy
+
+                    elif self._snake.dir == constants.Directions.Left:
+                        temp_x = snake_x+ dy
+                        temp_y = snake_y- dx
+
+                    elif self._snake.dir == constants.Directions.Right:
+                        temp_x = snake_x- dy
+                        temp_y = snake_y+ dx
+
+                    outlist.append(game_list[temp_x][temp_y])
+                except IndexError: # If theres an index error then it'll be a dead end
+                    outlist.append(constants.NNObjects.DeadEnd.value)
+
+        # Right dimension
+        for dy in range(-1, constants.RIGHT_DIMENSION_INPUTS-1):
+            for dx in range(-constants.RIGHT_DIMENSION_INPUTS, 0):
+                try:
+                    temp_x = 999
+                    temp_y = 999
+                    if self._snake.dir == constants.Directions.Up:
+                        temp_x = snake_x- dx
+                        temp_y = snake_y+ dy
+
+                    elif self._snake.dir == constants.Directions.Down:
+                        temp_x = snake_x+ dx
+                        temp_y = snake_y- dy
+
+                    elif self._snake.dir == constants.Directions.Left:
+                        temp_x = snake_x- dy
+                        temp_y = snake_y+ dx
+
+                    elif self._snake.dir == constants.Directions.Right:
+                        temp_x = snake_x+ dy
+                        temp_y = snake_y- dx
+
+                    outlist.append(game_list[temp_x][temp_y])
+                except IndexError: # If theres an index error then it'll be a dead end
+                    outlist.append(constants.NNObjects.DeadEnd.value)
+
+        # Front dimension
+        for i in range(0, constants.FRONT_DIMENSION_INPUTS):
+            try:
+                temp_x = snake_x
+                temp_y = snake_y
+
+                if self._snake.dir == constants.Directions.Up:
+                    temp_y = snake_y - i
+
+                elif self._snake.dir == constants.Directions.Down:
+                    temp_y = snake_y + i
+
+                elif self._snake.dir == constants.Directions.Right:
+                    temp_x = snake_x + i
+
+                elif self._snake.dir == constants.Directions.Left:
+                    temp_x = snake_x - i
+
+                outlist.append(game_list[temp_x][temp_y])
+
+            except IndexError: # If theres an index error then it'll be a dead end
+                outlist.append(constants.NNObjects.DeadEnd.value)
+
+        return outlist
 
 
 # Class instances
@@ -314,41 +403,40 @@ while True:
     # Update snake window
     constants.snakeWindow.update()
 
-    # Update snake
-    still_alive = constants.snake.update()
-
-    # Time out, don't wanna run in an infinite loop
-    if still_alive:
-        if constants.snake.move_timeout == constants.MaxMoveConstants:
-            still_alive = False
-
     fitness = constants.snake.score*5+(constants.snake.moves)*0.001
 
     ## Neural Network ##
+    species = constants.pool.species[constants.pool.currentSpecies]
+    genome = species.genomes[constants.pool.currentGenome]
+
+    # Update snake
+    still_alive = constants.snake.moveDir(nn.evaluateCurrent())
+    nn.displayNN(genome)
+
+    measured = 0
+    total = 0
+
+    for species in constants.pool.species:
+        for genome in species.genomes:
+            total += 1
+            if genome.fitness != 0:
+                measured = measured + 1
+
+    constants.snakeWindow.renderText('Gen: ' + str(constants.pool.generation), 5, 5)
+    constants.snakeWindow.renderText('species: ' + str(constants.pool.currentSpecies), 5, 25)
+    constants.snakeWindow.renderText('genome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')', 5, 45)
+    constants.snakeWindow.renderText('fitness: ' + str(fitness), 5, 65)
+
+    pygame.display.update()
+
+    # Time out, don't wanna run in an infinite loop
     if still_alive:
-        species = constants.pool.species[constants.pool.currentSpecies]
-        genome = species.genomes[constants.pool.currentGenome]
+        if constants.snake.updates_no >= constants.MaxUpdateConstants:
+            still_alive = False
+        if constants.snake.move_no >= constants.MaxMoveConstants:
+            still_alive = False
 
-        nn.evaluateCurrent()
-        nn.displayNN(genome)
-
-        measured = 0
-        total = 0
-
-        for species in constants.pool.species:
-            for genome in species.genomes:
-                total += 1
-                if genome.fitness != 0:
-                    measured = measured + 1
-
-        constants.snakeWindow.renderText('Gen: ' + str(constants.pool.generation), 5, 5)
-        constants.snakeWindow.renderText('species: ' + str(constants.pool.currentSpecies), 5, 25)
-        constants.snakeWindow.renderText('genome: ' + str(constants.pool.currentGenome) + '(' + str(measured) + ')', 5, 45)
-        constants.snakeWindow.renderText('fitness: ' + str(fitness), 5, 65)
-
-        pygame.display.update()
-
-    else:
+    if not still_alive:
 
         species = constants.pool.species[constants.pool.currentSpecies]
         genome = species.genomes[constants.pool.currentGenome]
