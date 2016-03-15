@@ -672,13 +672,10 @@ def displayNN(genome):
             constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, color)
 
         else:
-            if cell.value != 0:
+            if cell.value > 0:
                 constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 0, 255))
-
-                #if color > 0:
-                #    constants.snakeWindow.renderCustomColorBox(cell.x, cell.y, (0, 255, 0))
-                #else:
-                #    constants.snakeWindow.renderGrayBox(cell.x, cell.y)
+            else:
+                constants.snakeWindow.renderGrayBox(cell.x, cell.y)
 
     for gene in genome.genes:
         if gene.enabled and gene.into in cells and gene.out in cells:

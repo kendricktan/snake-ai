@@ -34,42 +34,42 @@ class Snake:
     def moveDir(self, d):
         if d['Left']:
             if self.dir == constants.Directions.Up:
-                self.xs[0] -= 1
+                #self.xs[0] -= 1
                 self.dir = constants.Directions.Left
             elif self.dir == constants.Directions.Down:
-                self.xs[0] += 1
+                #self.xs[0] += 1
                 self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Left:
-                self.ys[0] += 1
+                #self.ys[0] += 1
                 self.dir = constants.Directions.Down
             elif self.dir == constants.Directions.Right:
-                self.ys[0] -= 1
+                #self.ys[0] -= 1
                 self.dir = constants.Directions.Up
         elif d['Right']:
             if self.dir == constants.Directions.Up:
-                self.xs[0] += 1
+                #self.xs[0] += 1
                 self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Down:
-                self.xs[0] -= 1
+                #self.xs[0] -= 1
                 self.dir = constants.Directions.Left
             elif self.dir == constants.Directions.Left:
-                self.ys[0] -= 1
+                #self.ys[0] -= 1
                 self.dir = constants.Directions.Up
             elif self.dir == constants.Directions.Right:
-                self.ys[0] += 1
+                #self.ys[0] += 1
                 self.dir = constants.Directions.Down
         elif d['Front']:
             if self.dir == constants.Directions.Down:
-                self.ys[0] += 1
+                #self.ys[0] += 1
                 self.dir = constants.Directions.Down
             elif self.dir == constants.Directions.Up:
-                self.ys[0] -= 1
+                #self.ys[0] -= 1
                 self.dir = constants.Directions.Up
             elif self.dir == constants.Directions.Right:
-                self.xs[0] += 1
+                #self.xs[0] += 1
                 self.dir = constants.Directions.Right
             elif self.dir == constants.Directions.Left:
-                self.xs[0] -= 1
+                #self.xs[0] -= 1
                 self.dir = constants.Directions.Left
 
         return self.update()
@@ -82,13 +82,13 @@ class Snake:
         self._apple = apple
 
     def update(self):
+
         # Updates snake body
         for i in range(len(self.xs) - 1, 0, -1):
             self.xs[i] = self.xs[i - 1]
             self.ys[i] = self.ys[i - 1]
 
         # Updates snake head
-        '''
         if self.dir is constants.Directions.Down:
             self.ys[0] += 1
         elif self.dir is constants.Directions.Up:
@@ -97,7 +97,6 @@ class Snake:
             self.xs[0] += 1
         elif self.dir is constants.Directions.Left:
             self.xs[0] -= 1
-        '''
 
         if self.collideSelf():
             return False
@@ -154,7 +153,7 @@ class Snake:
         # Snake coordinates
         CENTER_POINT = int(math.ceil(constants.GAME_WIDTH_HEIGHT/2))
         self.xs = [CENTER_POINT, CENTER_POINT, CENTER_POINT]
-        self.ys = [2, 1, 0]
+        self.ys = [3, 2, 1]
 
         # etc
         self.score = 0
@@ -291,6 +290,8 @@ class SnakeWindow:
                 game_list[xy[0]][xy[1]] = constants.NNObjects.SnakeBody.value
             except IndexError:
                 pass
+
+        game_list[self._snake._apple.x][self._snake._apple.y] = constants.NNObjects.Apple.value
 
         # Snake variables
         snake_x = self._snake.xs[0]
