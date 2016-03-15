@@ -17,10 +17,10 @@ PADDING = 20
 
 # Inputs for the Neural network
 class NNObjects(Enum):
-    DeadEnd = -2
-    Background = -1
-    SnakeBody = 1
-    Apple = 2
+    DeadEnd = -3
+    Background = -2
+    SnakeBody = -1
+    Apple = 1
 
 class Directions(Enum):
     Left = -2
@@ -31,8 +31,8 @@ class Directions(Enum):
 # Neural Network parameters# Parameters for the network
 
 pool = None # Our pool variable
-LEFT_DIMENSION_INPUTS = 1 # Inputs for our left dimension (ixi)
-RIGHT_DIMENSION_INPUTS = 1 # Inputs for out right dimension (ixi)
+LEFT_DIMENSION_INPUTS = 3 # Inputs for our left dimension (ixi)
+RIGHT_DIMENSION_INPUTS = 3 # Inputs for out right dimension (ixi)
 FRONT_DIMENSION_INPUTS = 1 # Inputs for the front dimension (1xi)
 
 # Input 0: (snake.x - apple.x)
