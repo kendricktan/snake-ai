@@ -10,7 +10,10 @@ def loadPool(filename):
         constants.pool = pickle.load(input)
 
 def sigmoid(x):
-    return 2/(1+math.exp(-4.9*x))-1
+    try:
+        return 2/(1+math.exp(-4.9*x))-1
+    except OverflowError:
+        return 1 / (1 + math.exp(-x))
 
 class Pool:
     def __init__(self):
@@ -154,7 +157,7 @@ def evaluateNetwork(network, inputs):
                 sum += other.value
 
         if len(neuron.incoming) > 0:
-            neuron.value = sigmoid(sum)
+            neuron.value = sigmoid(round(sum, 8))
 
     outputs = {}
     for i in range(0, constants.Outputs):
@@ -458,7 +461,8 @@ def removeWeakSpecies():
     if len(survived) > 0:
         constants.pool.species = survived
     else:
-        constants.pool.species.pop()
+        if not constants.pool.species:
+            constants.pool.species.pop()
 
 def sameSpecies(genome1, genome2):
     dd = constants.DeltaDisjoint*disjoint(genome1.genes, genome2.genes)
@@ -616,7 +620,7 @@ def displayNN(genome):
     for key in network.neurons:
         neuron = network.neurons[key]
         if key > constants.Inputs and key < constants.MaxNodes:
-            cells[key] = Cell(150, 20, neuron.value)
+            cells[key] = Cell(150, 80, neuron.value)
 
     #Randomizing neuron positions
     for gene in genome.genes:
@@ -626,7 +630,7 @@ def displayNN(genome):
                 c2 = cells[gene.out]
 
                 if gene.into > constants.Inputs and gene.out < constants.MaxNodes:
-                    c1.x = 1.1*c1.x + 1.05*c2.x
+                    c1.x = 1.05*c1.x
 
                     if c1.x >= c2.x:
                         c1.x = c1.x - 4
@@ -637,10 +641,10 @@ def displayNN(genome):
                     if c1.x > 22:
                         c1.x = 22
 
-                    c1.y = 1.1*c1.y+1.05*c2.y
+                    c1.y = 1.1*c1.y
 
                 if gene.out > constants.Inputs and gene.out < constants.MaxNodes:
-                    c2.x = 1.1*c1.x + 1.05*c2.x
+                    c2.x = 1.1*c1.x
 
                     if c2.x >= c2.x:
                         c1.x = c2.x + 4
@@ -651,7 +655,7 @@ def displayNN(genome):
                     if c2.x > 22:
                         c2.x = 22
 
-                    c2.y = 1.1*c1.y + 1.05*c2.y
+                    c2.y = 1.1*c1.y
 
     for key in cells:
         cell = cells[key]

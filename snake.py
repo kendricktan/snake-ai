@@ -414,7 +414,7 @@ while True:
     # Update snake window
     constants.snakeWindow.update()
 
-    fitness = constants.snake.score*15+(constants.snake.moves)*0.01
+    fitness = constants.snake.score*15+(constants.snake.moves)*0.1
 
     ## Neural Network ##
     species = constants.pool.species[constants.pool.currentSpecies]
