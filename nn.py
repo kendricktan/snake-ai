@@ -66,7 +66,7 @@ class Genes:
 
     def newGene(self):
         self.into = 0
-        self.out = 0
+        self.out = random.randint(constants.Inputs+2, constants.MaxNodes-1)
         self.weight = 0.0
         self.enabled = True
         self.innovation = 0
