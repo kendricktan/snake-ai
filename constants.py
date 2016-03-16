@@ -3,7 +3,7 @@ from enum import Enum
 # Game parameters
 snake = None
 snakeWindow = None
-GLOBAL_SPEED = 10
+GLOBAL_SPEED = 1000
 
 # I like to play snake in a symmetrical window
 GAME_WIDTH_HEIGHT = 30
@@ -31,9 +31,9 @@ class Directions(Enum):
 # Neural Network parameters# Parameters for the network
 
 pool = None # Our pool variable
-LEFT_DIMENSION_INPUTS = 3 # Inputs for our left dimension (ixi)
-RIGHT_DIMENSION_INPUTS = 3 # Inputs for out right dimension (ixi)
-FRONT_DIMENSION_INPUTS = 3 # Inputs for the front dimension (1xi)
+LEFT_DIMENSION_INPUTS = 1 # Inputs for our left dimension (ixi)
+RIGHT_DIMENSION_INPUTS = 1 # Inputs for out right dimension (ixi)
+FRONT_DIMENSION_INPUTS = 1 # Inputs for the front dimension (1xi)
 
 # Input 0: (snake.x - apple.x)
 # Input 1: (snake.y - apple.y)
@@ -59,7 +59,7 @@ MutateConnectionsChance = 0.25
 PerturbChance = 0.85
 CrossoverChance = 0.75
 LinkMutationChance = 2.0
-NodeMutationChance = 0.75
+NodeMutationChance = 0.5
 BiasMutationChance = 0.4
 StepSize = 0.25
 DisableMutationChance = 0.2

@@ -13,7 +13,7 @@ def sigmoid(x):
     try:
         return 2/(1+math.exp(-4.9*x))-1
     except OverflowError:
-        return 1 / (1 + math.exp(-x))
+        return 1 / (1 + math.exp(int(-x)))
 
 class Pool:
     def __init__(self):
@@ -117,7 +117,7 @@ def basicGenome():
 def generateNetwork(genome):
     network = Network()
 
-    for i in range(1, constants.Inputs+2):
+    for i in range(0, constants.Inputs+1):
         network.neurons[i] = Neuron()
 
     for i in range(0, constants.Outputs):
@@ -138,11 +138,15 @@ def generateNetwork(genome):
 
 def evaluateNetwork(network, inputs):
     inputs.append(1)
+
     if len(inputs) != constants.Inputs+2:
         print("Incorrect number of neural network inputs")
+        print("Given inputs", len(inputs))
+        print("Required inputs", constants.Inputs)
+
         return
 
-    for i in range(1, len(inputs)):
+    for i in range(0, len(inputs)-1):
         network.neurons[i].value = inputs[i]
 
     for key in network.neurons:
@@ -581,7 +585,7 @@ def displayNN(genome):
     cells = {}
 
     # Display our inputs
-    i = 1
+    i = 0
     for x in range(0, 2):
         cells[i] = Cell(50, 25+(i*20), network.neurons[i].value)
         constants.snakeWindow.renderNNVisText(str(math.ceil(cells[i].value)), cells[i].x-40, cells[i].y-7, (0, 0, 0))
@@ -605,7 +609,7 @@ def displayNN(genome):
         i += 1
 
     # Our bias cell
-    biasCell = Cell(5, 85, network.neurons[constants.Inputs+1].value)
+    biasCell = Cell(5, 85, network.neurons[constants.Inputs].value)
     cells[constants.Inputs+1] = biasCell
 
     # Displays our output

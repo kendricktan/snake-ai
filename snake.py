@@ -269,6 +269,12 @@ class SnakeWindow:
 
         pygame.display.update()
 
+    # Get distance from snake to apple
+    def getDistToApple(self):
+        dif_x = self._snake.xs[0]-self._snake._apple.x
+        dif_y = self._snake.ys[0]-self._snake._apple.y
+        MAX_DIST = math.sqrt((constants.GAME_WIDTH_HEIGHT**2)*2)
+        return MAX_DIST - math.sqrt((dif_x**2)+(dif_y**2))
 
     # Generates a list of inputs for
     def getInputs(self):
@@ -299,8 +305,8 @@ class SnakeWindow:
 
         # Our output list
         outlist = [0]
-        outlist.append(snake_x- self._snake._apple.x) # Distance from snake to apple @ x axis
-        outlist.append(snake_y- self._snake._apple.y) # Distance from snake to apple @ y axis
+        outlist.append(-abs(snake_x- self._snake._apple.x)+1) # Distance from snake to apple @ x axis
+        outlist.append(-abs(snake_y- self._snake._apple.y)+1) # Distance from snake to apple @ y axis
 
         # CLOCKWISE FASHION @@
         # Left to rightgetInputs
@@ -331,6 +337,7 @@ class SnakeWindow:
                     if temp_x < 0 or temp_y < 0:
                         raise IndexError
 
+                    #self.window.blit(self.apple_img, (temp_x * constants.BLOCK_SIZE, temp_y * constants.BLOCK_SIZE))
                     outlist.append(game_list[temp_x][temp_y])
                 except IndexError: # If theres an index error then it'll be a dead end
 
@@ -362,6 +369,7 @@ class SnakeWindow:
                         raise IndexError
 
                     outlist.append(game_list[temp_x][temp_y])
+                    #self.window.blit(self.apple_img, (temp_x * constants.BLOCK_SIZE, temp_y * constants.BLOCK_SIZE))
                 except IndexError: # If theres an index error then it'll be a dead end
                     outlist.append(constants.NNObjects.DeadEnd.value)
 
@@ -414,7 +422,10 @@ while True:
     # Update snake window
     constants.snakeWindow.update()
 
-    fitness = constants.snake.score*15+(constants.snake.moves)*0.1
+    # Difference in x from snake to apple
+    # Difference in y from snake to apple
+
+    fitness = constants.snake.score*15+(constants.snakeWindow.getDistToApple()*0.25)
 
     ## Neural Network ##
     species = constants.pool.species[constants.pool.currentSpecies]
@@ -456,7 +467,7 @@ while True:
 
         if fitness > constants.pool.maxFitness:
             constants.pool.maxFitness = fitness
-            nn.savePool(str(fitness) + '_fitness_pool.dat')
+            nn.savePool(str(round(fitness, 2)) + '_fitness_pool.dat')
 
         constants.pool.currentSpecies = 0
         constants.pool.currentGenome = 0
